@@ -9,12 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $input['email'] ?? '';
     $senha = $input['senha'] ?? '';
     
-    // Conectar ao banco SQLite
+
     try {
         $pdo = new PDO('sqlite:../database/database.sqlite');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Verificar se usuário existe
+
         $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email_usuario = ?");
         $stmt->execute([$email]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);

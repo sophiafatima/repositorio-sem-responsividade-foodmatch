@@ -16,14 +16,11 @@ body {
     position: relative;
 }
 
+
 body.dark-mode {
   background-color: #121212;
   color: #f0f0f0;
   background-image: url(https://palatius.com/wp-content/uploads/2022/01/Posts-Janeiro_Blog-1-copy.png.webp);
-}
-
-body.dark-mode .lua {
-    filter: brightness(0) invert(1);
 }
 
 .dark-mode header {
@@ -36,8 +33,7 @@ body.dark-mode .lua {
   border: 1px solid #555;
 }
 
-.dark-mode .login-box{
-
+.dark-mode .cadastro-box{
  background-color: #333;
 }
 .dark-mode label, h4, input{
@@ -49,7 +45,7 @@ body.dark-mode .lua {
 
 .dark-mode .icone-busca a, button, .busca{
   border: none;
-  background-color: #ddae8f;
+  background-color: #fffaf3;
 }
 
 body {
@@ -58,6 +54,83 @@ body {
   height: 100vh;
   position: relative;
   background-image: url(https://palatius.com/wp-content/uploads/2022/01/Posts-Janeiro_Blog-1-copy.png.webp);
+}
+
+main {
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+body.dark-mode {
+    background-color: #181818;
+    color: #FF5722;
+}
+
+body.dark-mode .titulo .palavra {
+    text-shadow: 6px 6px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .botao-login {
+    background-color: #F7F7F7;
+    color: white;
+}
+
+body.dark-mode .lua {
+    filter: brightness(0) invert(1);
+}
+
+.dark-mode .icone-busca a,
+button,
+.busca {
+    border: none;
+    background-color: #fffaf3;
+}
+
+body.dark-mode .language-selector img {
+    background-color: transparent;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.language-selector {
+    position: relative;
+}
+
+.language-selector img {
+    width: 40px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
+    background-color: transparent;
+}
+
+.language-selector img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.language-options {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.language-options.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 .lua {
@@ -70,14 +143,14 @@ body {
   transition: filter 0.6s ease;
 }
 
-.login-container {
+.cadastro-container {
   display: flex;
   justify-content: flex-start; 
   align-items: center;
   height: 100vh;
   padding-left: 50px; 
 }
-.login-box {
+.cadastro-box {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 40px 30px;
   border-radius: 8px;
@@ -87,19 +160,19 @@ body {
   width: 100%;
 }
 
-.login-box h2 {
+.cadastro-box h2 {
   color: #f24e1e;
   margin-bottom: 20px;
 }
 
-.login-box label {
+.cadastro-box label {
   font-size: 14px;
   color: #333;
   display: block;
   margin: 15px 0 5px;
 }
 
-.login-box input {
+.cadastro-box input {
   width: 100%;
   padding: 10px;
   border: none;
@@ -109,7 +182,8 @@ body {
   background: transparent;
 }
 
-.login-box button {
+
+.cadastro-box button {
   margin-top: 20px;
   width: 100%;
   padding: 12px;
@@ -122,7 +196,7 @@ body {
   transition: background-color 0.3s;
 }
 
-.login-box button:hover {
+.cadastro-box button:hover {
   background-color: #d84315;
 }
 
@@ -130,36 +204,22 @@ body {
   text-align: center;
   font-size: 12px;
   margin-top: 10px;
-  color: #333;
+  color: #666565;
 }
 
-.cadastro {
+.login {
   text-align: center;
   margin-top: 10px;
   font-size: 14px;
 }
 
-.cadastro a {
+.login a {
   color: #f24e1e;
   text-decoration: none;
-}
-
-.links {
-  text-align: center;
-  margin: 15px 0;
-}
-
-.links a {
-  color: #f24e1e;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.links a:hover {
-  text-decoration: underline;
 }
 
 a{
-text-decoration: none;
-color:white;
-}
+  text-decoration: none;
+  color: white;
+  }
+  

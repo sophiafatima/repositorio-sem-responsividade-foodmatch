@@ -2,407 +2,147 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Receita;
-use Illuminate\Http\JsonResponse;
+use GuzzleHttp\Client;
+use App\Models\Usuario;
 
 class ReceitaController extends Controller
 {
-    public function index()
-    {
-        $receitas = Receita::all();
-        return view('receitas.index', compact('receitas'));
-    }
-
-    public function show($id)
+    public function gerarReceita(Request $request)
     {
         try {
-            $receita = Receita::findOrFail($id);
-            return view('receitas.show', compact('receita'));
-        } catch (\Exception $e) {
-            return redirect('/receitas')->with('error', 'Receita não encontrada');
-        }
-    }
-    
-    public function apiShow($id): JsonResponse
-    {
-        try {
-            $receita = Receita::findOrFail($id);
+            $ingredientes = $request->get('ingredientes', '');
+            $porcoes = $request->get('porcoes', 2);
+            
+            // Buscar restrições do usuário
+            $restricoes = '';
+            if (session('usuario_logado')) {
+                $usuario = Usuario::where('nome_usuario', session('usuario_logado'))->first();
+                if ($usuario && $usuario->restricoes) {
+                    $restricoes = $usuario->restricoes;
+                }
+            }
+            
+            // Gerar receita com base nos ingredientes, porções e restrições
+            $receita = $this->criarReceitaPersonalizada($ingredientes, $porcoes, $restricoes);
+            
             return response()->json([
                 'success' => true,
                 'receita' => $receita
             ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Receita não encontrada'
-            ]);
-        }
-    }
-
-    public function store(Request $request)
-    {
-        $receita = Receita::create([
-            'nome_receita' => $request->nome_receita,
-            'descricao_receita' => $request->descricao_receita,
-            'ingredientes' => $request->ingredientes,
-            'preferencias' => $request->preferencias,
-            'restricao' => $request->has('restricao')
-        ]);
-        
-        return redirect('/receitas')->with('success', 'Receita criada com sucesso!');
-    }
-
-    public function gerarReceita(Request $request): JsonResponse
-    {
-        try {
-            $pedido = trim($request->input('ingredientes', ''));
-            $preferencias = $request->input('preferencias', []);
-            
-            if (empty($pedido)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Por favor, informe o que deseja cozinhar'
-                ]);
-            }
-            
-            $receita = $this->gerarReceitaIA($pedido, $preferencias);
-            
-            return response()->json([
-                'success' => true,
-                'receita' => $receita,
-                'message' => 'Receita gerada pela IA!'
-            ]);
             
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Erro ao gerar receita: ' . $e->getMessage()
             ]);
         }
     }
     
-    private function buscarReceitaOnline($pedido)
+    private function criarReceitaPersonalizada($ingredientes, $porcoes, $restricoes)
     {
-        // Usar IA local primeiro (mais rápido e confiável)
-        try {
-            return $this->gerarReceitaIA($pedido);
-        } catch (\Exception $e) {
-            // Se IA falhar, tenta APIs externas
-            try {
-                return $this->buscarMealDB($pedido);
-            } catch (\Exception $e2) {
-                return $this->gerarReceitaLocal($pedido);
-            }
-        }
-    }
-    
-    private function gerarReceitaIA($pedido, $preferencias = [])
-    {
-        $ingredientesArray = array_map('trim', explode(',', strtolower($pedido)));
+        $ingredientesLower = strtolower($ingredientes);
         
-        // Base de conhecimento da IA expandida
-        $baseReceitas = [
-            'frango' => [
-                'nome' => 'Frango Temperado Especial',
-                'ingredientes' => ['1 peito de frango grande', '3 dentes de alho', '1 limão', 'sal a gosto', 'pimenta do reino', '2 colheres de azeite', 'ervas finas'],
-                'preparo' => "1. Corte o peito de frango ao meio na horizontal\n2. Tempere com sal e pimenta dos dois lados\n3. Esprema o limão sobre o frango\n4. Amasse o alho e espalhe sobre a carne\n5. Regue com azeite e adicione ervas\n6. Deixe marinar por 30 minutos\n7. Aqueça a grelha ou frigideira\n8. Grelhe por 8 minutos de cada lado\n9. Verifique se está bem cozido\n10. Sirva quente"
-            ],
-            'ovo' => [
-                'nome' => 'Omelete Cremosa',
-                'ingredientes' => ['3 ovos grandes', 'sal', '2 colheres de manteiga', '50g queijo ralado', 'cebolinha'],
-                'preparo' => "1. Bata os ovos com sal em tigela\n2. Aqueça a manteiga na frigideira\n3. Despeje os ovos batidos\n4. Mexa delicadamente com espátula\n5. Adicione queijo quando quase pronto\n6. Dobre ao meio\n7. Polvilhe cebolinha\n8. Sirva imediatamente"
-            ],
-            'macarrão' => [
-                'nome' => 'Macarrão à Carbonara',
-                'ingredientes' => ['500g macarrão', '200g bacon', '3 ovos', '100g parmesao', 'pimenta preta', 'sal'],
-                'preparo' => "1. Cozinhe o macarrão em água salgada\n2. Corte o bacon em cubos e frite\n3. Bata ovos com queijo ralado\n4. Escorra o macarrão reservando água\n5. Misture macarrão com bacon\n6. Retire do fogo e adicione ovos\n7. Mexa rapidamente\n8. Tempere com pimenta\n9. Sirva quente"
-            ],
-            'arroz' => [
-                'nome' => 'Arroz Pilaf',
-                'ingredientes' => ['2 xícaras arroz', '1 cebola', '2 dentes alho', '3 colheres azeite', 'sal', 'caldo de galinha'],
-                'preparo' => "1. Pique cebola e alho finamente\n2. Refogue no azeite até dourar\n3. Adicione arroz e refogue 2 min\n4. Acrescente caldo quente (1:2)\n5. Tempere com sal\n6. Cozinhe em fogo baixo 18 min\n7. Deixe descansar 5 min\n8. Solte com garfo"
-            ],
-            'pavê' => [
-                'nome' => 'Pavê de Chocolate Cremoso',
-                'ingredientes' => ['200g biscoito maisena', '1 lata leite condensado', '1 lata creme de leite', '200ml leite', '3 colheres chocolate em pó', '1 pacote gelatina'],
-                'preparo' => "1. Dissolva gelatina em água quente\n2. Misture leite condensado, creme e chocolate\n3. Adicione gelatina à mistura\n4. Molhe biscoitos no leite\n5. Alterne camadas biscoito e creme\n6. Leve à geladeira 4 horas\n7. Decore a gosto\n8. Sirva gelado"
-            ],
-            'bolo' => [
-                'nome' => 'Bolo de Chocolate Fácil',
-                'ingredientes' => ['3 ovos', '2 xícaras açúcar', '2 xícaras farinha', '1 xícara chocolate pó', '1 xícara água quente', '1/2 xícara óleo'],
-                'preparo' => "1. Bata ovos com açúcar\n2. Adicione farinha e chocolate\n3. Misture óleo e água quente\n4. Incorpore à massa\n5. Despeje em forma untada\n6. Asse 180°C por 40 min\n7. Teste com palito\n8. Deixe esfriar"
-            ]
-        ];
-        
-        // IA: Encontrar receita baseada nos ingredientes
-        $receitaEncontrada = null;
-        $palavrasChave = array_keys($baseReceitas);
-        
-        foreach ($palavrasChave as $palavra) {
-            if (strpos(strtolower($pedido), $palavra) !== false) {
-                $receitaEncontrada = $baseReceitas[$palavra];
-                break;
-            }
+        // Aplicar restrições
+        $restricoesTexto = '';
+        if ($restricoes) {
+            $restricoesTexto = " (Adaptado para: $restricoes)";
         }
         
-        // Se não encontrou, usar IA para criar receita baseada nos ingredientes
-        if (!$receitaEncontrada) {
-            $receitaEncontrada = $this->criarReceitaInteligente($ingredientesArray);
+        // Receitas de macarrão
+        if (strpos($ingredientesLower, 'macarrão') !== false || strpos($ingredientesLower, 'macarrao') !== false || strpos($ingredientesLower, 'massa') !== false) {
+            return $this->gerarReceitaMacarrao($porcoes, $restricoes);
         }
         
-        // Aplicar preferências
-        $receitaFinal = $this->aplicarPreferencias($receitaEncontrada, $preferencias);
-        
-        return [
-            'nome' => $receitaFinal['nome'],
-            'ingredientes' => $receitaFinal['ingredientes'],
-            'modo_preparo' => $receitaFinal['preparo'],
-            'tempo_preparo' => '30-45 minutos',
-            'porcoes' => '2-4 pessoas'
-        ];
-    }
-    
-    private function criarReceitaInteligente($ingredientes)
-    {
-        // IA simples para criar receitas baseada nos ingredientes fornecidos
-        $nomeReceita = 'Receita Especial com ' . ucfirst($ingredientes[0] ?? 'Ingredientes');
-        
-        $ingredientesCompletos = array_merge($ingredientes, ['sal', 'pimenta', 'azeite']);
-        
-        $preparo = "1. Prepare todos os ingredientes\n2. Tempere com sal e pimenta\n3. Aqueça o azeite em panela\n4. Adicione os ingredientes principais\n5. Cozinhe em fogo médio\n6. Mexa ocasionalmente\n7. Ajuste temperos\n8. Sirva quente";
-        
-        return [
-            'nome' => $nomeReceita,
-            'ingredientes' => $ingredientesCompletos,
-            'preparo' => $preparo
-        ];
-    }
-    
-    private function aplicarPreferencias($receita, $preferencias)
-    {
-        $nome = $receita['nome'];
-        $ingredientes = $receita['ingredientes'];
-        $preparo = $receita['preparo'];
-        
-        // Aplicar restrições de lactose
-        if (isset($preferencias['lactose']) && $preferencias['lactose']) {
-            $nome .= ' (Sem Lactose)';
-            $ingredientes = array_filter($ingredientes, function($ing) {
-                return !preg_match('/queijo|leite|manteiga|creme/i', $ing);
-            });
-            $ingredientes[] = 'leite vegetal';
-        }
-        
-        // Aplicar alergias
-        if (isset($preferencias['alergia']) && $preferencias['alergia'] && !empty($preferencias['alergiaQuais'])) {
-            $alergia = strtolower($preferencias['alergiaQuais']);
-            $nome .= ' (Sem ' . ucfirst($alergia) . ')';
-            $ingredientes = array_filter($ingredientes, function($ing) use ($alergia) {
-                return stripos($ing, $alergia) === false;
-            });
-        }
-        
-        return [
-            'nome' => $nome,
-            'ingredientes' => array_values($ingredientes),
-            'preparo' => $preparo
-        ];
-    }
-    
-    private function buscarMealDB($pedido)
-    {
-        $url = "https://www.themealdb.com/api/json/v1/1/search.php?s=" . urlencode($pedido);
-        
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => 10,
-                'user_agent' => 'FoodMatch App'
-            ]
-        ]);
-        
-        $response = @file_get_contents($url, false, $context);
-        if (!$response) throw new \Exception('API indisponível');
-        
-        $data = json_decode($response, true);
-        
-        if (!empty($data['meals'])) {
-            $meal = $data['meals'][0];
-            
-            $ingredients = [];
-            for ($i = 1; $i <= 20; $i++) {
-                $ingredient = $meal["strIngredient{$i}"];
-                $measure = $meal["strMeasure{$i}"];
-                if ($ingredient && trim($ingredient)) {
-                    $ingredients[] = trim($measure . ' ' . $ingredient);
-                }
-            }
-            
+        // Receitas específicas com adaptação de porções
+        if (strpos($ingredientesLower, 'uva') !== false) {
             return [
-                'nome' => $meal['strMeal'],
-                'ingredientes' => $ingredients,
-                'modo_preparo' => $meal['strInstructions'],
-                'tempo_preparo' => '45 minutos',
-                'porcoes' => '4 pessoas'
+                'nome' => 'Sorvete de Uva' . $restricoesTexto,
+                'ingredientes' => [
+                    ($porcoes * 1) . ' xícara(s) de polpa de uva',
+                    ($porcoes * 0.5) . ' lata(s) de leite condensado' . ($this->temRestricao($restricoes, 'lactose') ? ' sem lactose' : ''),
+                    ($porcoes * 0.5) . ' lata(s) de creme de leite' . ($this->temRestricao($restricoes, 'lactose') ? ' vegetal' : ''),
+                    ($porcoes * 0.25) . ' xícara(s) de açúcar'
+                ],
+                'modo_preparo' => "1. Bata todos ingredientes no liquidificador\n2. Despeje em recipiente\n3. Leve ao freezer por 2 horas\n4. Bata novamente para quebrar cristais\n5. Congele até endurecer\n6. Sirva em bolas (Rende $porcoes porções)",
+                'tempo_preparo' => '4 horas',
+                'porcoes' => $porcoes
             ];
         }
         
-        throw new \Exception('Receita não encontrada no MealDB');
-    }
-    
-    private function buscarRecipeAPI($pedido)
-    {
-        // API gratuita alternativa
-        $url = "https://api.edamam.com/search?q=" . urlencode($pedido) . "&app_id=demo&app_key=demo&from=0&to=1";
-        
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => 10,
-                'user_agent' => 'FoodMatch App'
-            ]
-        ]);
-        
-        $response = @file_get_contents($url, false, $context);
-        if (!$response) throw new \Exception('API indisponível');
-        
-        $data = json_decode($response, true);
-        
-        if (!empty($data['hits'])) {
-            $recipe = $data['hits'][0]['recipe'];
-            
-            return [
-                'nome' => $recipe['label'],
-                'ingredientes' => $recipe['ingredientLines'],
-                'modo_preparo' => "Receita completa disponível em: " . $recipe['url'],
-                'tempo_preparo' => ($recipe['totalTime'] ?? 45) . ' minutos',
-                'porcoes' => ($recipe['yield'] ?? 4) . ' pessoas'
+        if (strpos($ingredientesLower, 'frango') !== false) {
+            $ingredientesFrango = [
+                ($porcoes * 0.5) . ' peito(s) de frango',
+                ($porcoes * 1.5) . ' dente(s) de alho',
+                ($porcoes * 0.5) . ' limão(ões)',
+                'sal a gosto',
+                'pimenta do reino a gosto',
+                ($porcoes * 1) . ' colher(es) de azeite'
             ];
-        }
-        
-        throw new \Exception('Receita não encontrada no Edamam');
-    }
-    
-    private function buscarSpoonacular($pedido)
-    {
-        $apiKey = env('SPOONACULAR_API_KEY');
-        if (!$apiKey || $apiKey === 'your_api_key_here') {
-            throw new \Exception('API key não configurada');
-        }
-        
-        $url = "https://api.spoonacular.com/recipes/complexSearch?query=" . urlencode($pedido) . "&number=1&addRecipeInformation=true&apiKey=" . $apiKey;
-        
-        $context = stream_context_create([
-            'http' => [
-                'timeout' => 10,
-                'user_agent' => 'FoodMatch App'
-            ]
-        ]);
-        
-        $response = @file_get_contents($url, false, $context);
-        if (!$response) throw new \Exception('API Spoonacular indisponível');
-        
-        $data = json_decode($response, true);
-        
-        if (!empty($data['results'])) {
-            $recipe = $data['results'][0];
             
-            $ingredients = [];
-            if (!empty($recipe['extendedIngredients'])) {
-                foreach ($recipe['extendedIngredients'] as $ingredient) {
-                    $ingredients[] = $ingredient['original'];
-                }
+            if ($this->temRestricao($restricoes, 'vegano') || $this->temRestricao($restricoes, 'vegetariano')) {
+                // Substituir frango por proteína vegetal
+                $ingredientesFrango[0] = ($porcoes * 200) . 'g de tofu ou proteína de soja';
             }
             
             return [
-                'nome' => $recipe['title'],
-                'ingredientes' => $ingredients,
-                'modo_preparo' => $recipe['summary'] ?? 'Instruções detalhadas disponíveis no link da receita',
-                'tempo_preparo' => ($recipe['readyInMinutes'] ?? 30) . ' minutos',
-                'porcoes' => ($recipe['servings'] ?? 4) . ' pessoas'
+                'nome' => 'Proteína Grelhada' . $restricoesTexto,
+                'ingredientes' => $ingredientesFrango,
+                'modo_preparo' => "1. Tempere a proteína com sal e pimenta\n2. Adicione alho amassado e azeite\n3. Esprema o limão por cima\n4. Grelhe por 8 minutos de cada lado\n5. Sirva quente (Rende $porcoes porções)",
+                'tempo_preparo' => '30 minutos',
+                'porcoes' => $porcoes
             ];
         }
         
-        throw new \Exception('Receita não encontrada no Spoonacular');
-    }
-    
-    private function gerarReceitaLocal($pedido)
-    {
-        // Base local expandida como fallback
-        $receitas = [
-            'pave' => ['nome' => 'Pavê de Chocolate', 'ingredientes' => ['200g biscoito maisena', '1 lata leite condensado', '1 lata creme de leite', '200ml leite', '3 colheres chocolate em pó'], 'modo_preparo' => "1. Dissolva a gelatina\n2. Misture leite condensado e chocolate\n3. Alterne camadas\n4. Geladeira por 4h", 'tempo_preparo' => '30 min', 'porcoes' => '8 pessoas'],
-            'bolo' => ['nome' => 'Bolo de Chocolate', 'ingredientes' => ['3 ovos', '2 xícaras açúcar', '2 xícaras farinha', '1 xícara chocolate'], 'modo_preparo' => "1. Bata ovos e açúcar\n2. Adicione farinha\n3. Asse 40 min a 180°C", 'tempo_preparo' => '1 hora', 'porcoes' => '10 pessoas'],
-            'lasanha' => ['nome' => 'Lasanha Bolonhesa', 'ingredientes' => ['500g massa', '500g carne', '2 latas molho tomate', '500g mussarela'], 'modo_preparo' => "1. Refogue a carne\n2. Monte camadas\n3. Asse 30 min", 'tempo_preparo' => '1h 30min', 'porcoes' => '6 pessoas'],
-            'brigadeiro' => ['nome' => 'Brigadeiro', 'ingredientes' => ['1 lata leite condensado', '3 colheres chocolate', '1 colher manteiga'], 'modo_preparo' => "1. Misture tudo\n2. Cozinhe mexendo\n3. Faça bolinhas", 'tempo_preparo' => '30 min', 'porcoes' => '20 unidades'],
-            'pizza' => ['nome' => 'Pizza Margherita', 'ingredientes' => ['300g farinha', 'fermento', 'molho tomate', 'mussarela'], 'modo_preparo' => "1. Faça a massa\n2. Adicione cobertura\n3. Asse 15 min", 'tempo_preparo' => '2 horas', 'porcoes' => '4 pessoas']
+        // Receita genérica adaptada
+        return [
+            'nome' => 'Receita Personalizada' . $restricoesTexto,
+            'ingredientes' => [
+                "Ingredientes principais: $ingredientes (para $porcoes pessoas)",
+                'Temperos a gosto',
+                'Azeite ou óleo para cozinhar'
+            ],
+            'modo_preparo' => "1. Prepare os ingredientes conforme suas preferências\n2. Tempere adequadamente\n3. Cozinhe em fogo médio\n4. Ajuste o sabor conforme necessário\n5. Sirva para $porcoes pessoas",
+            'tempo_preparo' => '45 minutos',
+            'porcoes' => $porcoes
         ];
+    }
+    
+    private function gerarReceitaMacarrao($porcoes, $restricoes)
+    {
+        $restricoesTexto = $restricoes ? " (Adaptado para: $restricoes)" : '';
         
-        $pedidoLower = strtolower($pedido);
-        foreach ($receitas as $palavra => $receita) {
-            if (strpos($pedidoLower, $palavra) !== false) {
-                return $receita;
-            }
-        }
-        
-        throw new \Exception('Receita "' . $pedido . '" não encontrada. Sistema temporariamente limitado.');
+        return [
+            'nome' => 'Macarrão à Carbonara' . $restricoesTexto,
+            'ingredientes' => [
+                ($porcoes * 100) . 'g de macarrão espaguete',
+                ($this->temRestricao($restricoes, 'vegano') ? ($porcoes * 2) . ' colher(es) de creme vegetal' : ($porcoes * 2) . ' gema(s) de ovo'),
+                ($porcoes * 50) . 'g de queijo parmesão ralado' . ($this->temRestricao($restricoes, 'lactose') ? ' sem lactose' : ''),
+                ($this->temRestricao($restricoes, 'vegetariano') || $this->temRestricao($restricoes, 'vegano') ? ($porcoes * 100) . 'g de cogumelos fatiados' : ($porcoes * 50) . 'g de bacon em cubos'),
+                ($porcoes * 1) . ' dente(s) de alho',
+                'Sal e pimenta do reino a gosto',
+                ($porcoes * 1) . ' colher(es) de sopa de azeite'
+            ],
+            'modo_preparo' => $this->temRestricao($restricoes, 'vegano') ? 
+                "1. Cozinhe o macarrão em água fervente com sal\n2. Refogue o alho no azeite\n3. Adicione os cogumelos e refogue\n4. Misture o creme vegetal com o queijo vegano\n5. Escorra o macarrão e misture com os cogumelos\n6. Adicione a mistura de creme vegetal\n7. Mexa bem para incorporar\n8. Tempere com sal e pimenta\n9. Sirva imediatamente (Rende $porcoes porções)" :
+                "1. Cozinhe o macarrão em água fervente com sal\n2. Refogue o alho no azeite\n3. Adicione o bacon e doure\n4. Misture as gemas com o queijo\n5. Escorra o macarrão e misture com o bacon\n6. Retire do fogo e adicione a mistura de gemas\n7. Mexa rapidamente para não cozinhar as gemas\n8. Tempere com sal e pimenta\n9. Sirva imediatamente (Rende $porcoes porções)",
+            'tempo_preparo' => '20 minutos',
+            'porcoes' => $porcoes
+        ];
+    }
+    
+    private function temRestricao($restricoes, $tipo)
+    {
+        if (!$restricoes) return false;
+        $restricoesLower = strtolower($restricoes);
+        return strpos($restricoesLower, $tipo) !== false;
     }
 
-    public function salvarReceita(Request $request): JsonResponse
+    public function salvarReceita(Request $request)
     {
-        try {
-            $receitaData = $request->input('receita', []);
-            
-            if (empty($receitaData['nome'])) {
-                return response()->json(['success' => false, 'message' => 'Nome da receita é obrigatório']);
-            }
-            
-            $ingredientes = isset($receitaData['ingredientes']) && is_array($receitaData['ingredientes']) 
-                ? implode(', ', $receitaData['ingredientes']) 
-                : (isset($receitaData['ingredientes']) ? $receitaData['ingredientes'] : '');
-            
-            $receita = Receita::create([
-                'nome_receita' => substr($receitaData['nome'], 0, 500),
-                'descricao_receita' => isset($receitaData['modo_preparo']) ? substr($receitaData['modo_preparo'], 0, 500) : 'Receita salva pelo usuário',
-                'ingredientes' => substr($ingredientes, 0, 500),
-                'preferencias' => json_encode($request->input('preferencias', [])),
-                'restricao' => false
-            ]);
-            
-            return response()->json(['success' => true, 'id' => $receita->id_receita]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }
-    }
-
-    public function deletarReceita(Request $request): JsonResponse
-    {
-        try {
-            $receita = Receita::findOrFail($request->input('id'));
-            $receita->delete();
-            
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }
-    }
-    
-    public function salvarPasta(Request $request): JsonResponse
-    {
-        return response()->json(['success' => true, 'message' => 'Pasta salva']);
-    }
-    
-    public function salvarAvaliacao(Request $request): JsonResponse
-    {
-        return response()->json(['success' => true, 'message' => 'Avaliação salva']);
-    }
-    
-    public function salvarComentario(Request $request): JsonResponse
-    {
-        return response()->json(['success' => true, 'message' => 'Comentário salvo']);
-    }
-    
-    public function salvarDenuncia(Request $request): JsonResponse
-    {
-        return response()->json(['success' => true, 'message' => 'Denúncia salva']);
+        $receita = $request->input('receita');
+        $arquivo = storage_path('app/public/receitas/' . time() . '.txt');
+        file_put_contents($arquivo, $receita);
+        return response()->json(['message' => 'Receita salva com sucesso!', 'arquivo' => $arquivo]);
     }
 }

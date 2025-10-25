@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FoodMatch - Receitas Avaliadas</title>
+  <link rel="stylesheet" href="Posts.css" />
+</head>
+<body>
+  <header>
+    <div class="title">Receitas Avaliadas</div>
+    <div class="icons">
+      <div class="header-buttons">
+        <a href="doof.html" class="btn">Doof</a>
+      </div>
+      <img src="moon-solid.svg" class="lua">
+      <div style="position: relative; display: inline-block;">
+        <img src="https://flagcdn.com/w40/br.png" alt="BR" id="currentFlag" onclick="toggleLanguage()" style="width: 24px; height: 24px; cursor: pointer;" />
+        <div id="languageOptions" style="display: none; position: absolute; top: 30px; left: 0; background: white; border: 1px solid #ccc; border-radius: 5px; padding: 5px; z-index: 10000; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+          <img src="https://flagcdn.com/w40/br.png" alt="BR" onclick="changeLanguage('pt')" style="display: block; margin: 2px 0; width: 32px; cursor: pointer;" />
+          <img src="https://flagcdn.com/w40/us.png" alt="EN" onclick="changeLanguage('en')" style="display: block; margin: 2px 0; width: 32px; cursor: pointer;" />
+        </div>
+      </div>
+      <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Perfil" onclick="toggleSidebar()" style="cursor: pointer; width: 24px; height: 24px; border-radius: 50%; object-fit: cover;" />
+      <div class="profile-sidebar" id="profileSidebar">
+        <button onclick="toggleSidebar()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">✕</button>
+        <div class="user">
+          <img src="user.png" alt="Ícone perfil" id="userPhoto">
+          <h3 id="userName">Carregando...</h3> 
+        </div>
+        <a href="index.html"><button>🏠 Página Inicial</button></a>
+        <a href="Perfil.html"><button>📁 Receitas Salvas</button></a>
+        <a href="ReceitasAvaliadas.html"><button>⭐ Receitas Avaliadas</button></a>
+        <a href="Posts.html"><button>📬 Posts</button></a>
+        <a href="Doof.html"><button>🔎 Doof</button></a>
+        <hr />
+        <button onclick="window.location.href='PerfilUsuario.html'">🙎♀️ Perfil</button>
+        <button onclick="window.location.href='PerfilEmpresarial.html'">💼 Perfil Empresarial</button>
+        <button onclick="window.location.href='Publicidade.html'">📢 Gerenciar Publicidade</button>
+        <button>⚙️ Configurações de perfil</button>
+        <button onclick="logout()">🚪 Sair da Conta</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <section class="avaliacoes-historico">
+      <h2>Seu Histórico de Avaliações</h2>
+      
+      <div class="filtros">
+        <button onclick="filtrarAvaliacoes('todas')" class="filtro-btn active">Todas</button>
+        <button onclick="filtrarAvaliacoes('5')" class="filtro-btn">⭐⭐⭐⭐⭐</button>
+        <button onclick="filtrarAvaliacoes('4')" class="filtro-btn">⭐⭐⭐⭐</button>
+        <button onclick="filtrarAvaliacoes('3')" class="filtro-btn">⭐⭐⭐</button>
+        <button onclick="filtrarAvaliacoes('2')" class="filtro-btn">⭐⭐</button>
+        <button onclick="filtrarAvaliacoes('1')" class="filtro-btn">⭐</button>
+      </div>
+      
+      <div id="avaliacoes-detalhadas"></div>
+    </section>
+
+    <section class="estatisticas">
+      <h2>Suas Estatísticas</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3 id="total-avaliacoes">0</h3>
+          <p>Receitas Avaliadas</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3 id="media-avaliacoes">0.0</h3>
+          <p>Nota Média</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3 id="total-curtidas">0</h3>
+          <p>Curtidas Dadas</p>
+        </div>
+        
+        <div class="stat-card">
+          <h3 id="total-comentarios">0</h3>
+          <p>Comentários Feitos</p>
+        </div>
+      </div>
+      
+      <div class="atividade-recente">
+        <h3>Atividade Recente</h3>
+        <div id="atividade-lista"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarHistoricoAvaliacoes();
+      carregarEstatisticas();
+      
+      // Carregar foto do usuário
+      carregarFotoUsuarioLocal();
+    });
+
+    function carregarHistoricoAvaliacoes() {
+      const avaliacoes = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+      const container = document.getElementById('avaliacoes-detalhadas');
+      
+      if (avaliacoes.length === 0) {
+        container.innerHTML = '<div class="no-data"><p>Você ainda não avaliou nenhuma receita.</p><a href="Posts.html">Ir para Posts</a></div>';
+        return;
+      }
+      
+      container.innerHTML = avaliacoes.map(avaliacao => `
+        <div class="avaliacao-card" data-rating="${avaliacao.rating}">
+          <div class="avaliacao-header">
+            <h4>Pizza sem Trigo</h4>
+            <div class="rating-display">${'⭐'.repeat(avaliacao.rating)}${'☆'.repeat(5-avaliacao.rating)}</div>
+          </div>
+          <div class="avaliacao-info">
+            <p><strong>Post:</strong> ${avaliacao.postId}</p>
+            <p><strong>Data:</strong> ${avaliacao.date}</p>
+            ${avaliacao.comment ? `<p><strong>Comentário:</strong> "${avaliacao.comment}"</p>` : ''}
+          </div>
+          <div class="avaliacao-actions">
+            <button onclick="editarAvaliacao(${avaliacoes.indexOf(avaliacao)})">Editar</button>
+            <button onclick="excluirAvaliacao(${avaliacoes.indexOf(avaliacao)})" class="btn-delete">Excluir</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filtrarAvaliacoes(rating) {
+      // Remover classe active de todos os botões
+      document.querySelectorAll('.filtro-btn').forEach(btn => btn.classList.remove('active'));
+      // Adicionar classe active ao botão clicado
+      event.target.classList.add('active');
+      
+      const cards = document.querySelectorAll('.avaliacao-card');
+      cards.forEach(card => {
+        if (rating === 'todas' || card.dataset.rating === rating) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function carregarEstatisticas() {
+      const avaliacoes = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+      const interactions = JSON.parse(localStorage.getItem('user_interactions') || '{}');
+      const userComments = JSON.parse(localStorage.getItem('user_comments') || '[]');
+      
+      // Total de avaliações
+      document.getElementById('total-avaliacoes').textContent = avaliacoes.length;
+      
+      // Média das avaliações
+      if (avaliacoes.length > 0) {
+        const media = avaliacoes.reduce((sum, av) => sum + av.rating, 0) / avaliacoes.length;
+        document.getElementById('media-avaliacoes').textContent = media.toFixed(1);
+      }
+      
+      // Total de curtidas
+      const totalCurtidas = Object.keys(interactions.posts || {}).length + Object.keys(interactions.comments || {}).length;
+      document.getElementById('total-curtidas').textContent = totalCurtidas;
+      
+      // Total de comentários
+      document.getElementById('total-comentarios').textContent = userComments.length;
+      
+      // Atividade recente
+      const atividades = [];
+      
+      // Adicionar avaliações recentes
+      avaliacoes.slice(-3).forEach(av => {
+        atividades.push({
+          tipo: 'avaliacao',
+          texto: `Avaliou receita com ${av.rating} estrelas`,
+          data: av.date
+        });
+      });
+      
+      // Adicionar comentários recentes
+      userComments.slice(-3).forEach(comment => {
+        atividades.push({
+          tipo: 'comentario',
+          texto: `Comentou: "${comment.text.substring(0, 30)}..."`,
+          data: comment.date
+        });
+      });
+      
+      // Ordenar por data e mostrar os 5 mais recentes
+      atividades.sort((a, b) => new Date(b.data) - new Date(a.data));
+      
+      const atividadeContainer = document.getElementById('atividade-lista');
+      atividadeContainer.innerHTML = atividades.slice(0, 5).map(ativ => `
+        <div class="atividade-item">
+          <span class="atividade-icon">${ativ.tipo === 'avaliacao' ? '⭐' : '💬'}</span>
+          <div class="atividade-texto">
+            <p>${ativ.texto}</p>
+            <small>${ativ.data}</small>
+          </div>
+        </div>
+      `).join('') || '<p>Nenhuma atividade recente</p>';
+    }
+
+    function editarAvaliacao(index) {
+      // Implementar edição de avaliação
+      alert('Funcionalidade de edição em desenvolvimento');
+    }
+
+    function excluirAvaliacao(index) {
+      if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
+        const avaliacoes = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+        avaliacoes.splice(index, 1);
+        localStorage.setItem('user_reviews', JSON.stringify(avaliacoes));
+        carregarHistoricoAvaliacoes();
+        carregarEstatisticas();
+      }
+    }
+
+    function logout() {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        fetch('/logout', { method: 'POST' })
+          .then(() => {
+            window.location.href = '/Login.html';
+          });
+      }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('profileSidebar');
+      sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+    }
+    
+    function toggleLanguage() {
+      const options = document.getElementById('languageOptions');
+      if (options) {
+        if (options.style.display === 'block') {
+          options.style.display = 'none';
+        } else {
+          options.style.display = 'block';
+        }
+      }
+    }
+    
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      
+      const currentFlag = document.getElementById('currentFlag');
+      if (currentFlag) {
+        if (lang === 'en') {
+          currentFlag.src = 'https://flagcdn.com/w40/us.png';
+          currentFlag.alt = 'EN';
+        } else {
+          currentFlag.src = 'https://flagcdn.com/w40/br.png';
+          currentFlag.alt = 'BR';
+        }
+      }
+      
+      const options = document.getElementById('languageOptions');
+      if (options) options.style.display = 'none';
+      
+      // Recarregar página para aplicar tradução
+      location.reload();
+    }
+    
+    function carregarFotoUsuarioLocal() {
+      // Primeiro tentar localStorage
+      const fotoLocal = localStorage.getItem('user_photo');
+      if (fotoLocal) {
+        aplicarFotoLocal(fotoLocal);
+      }
+      
+      // Depois tentar servidor
+      fetch('/perfil-dados')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.usuario) {
+            document.getElementById('userName').textContent = data.usuario.nome_usuario;
+            if (data.usuario.foto_perfil) {
+              const fotoUrl = '/storage/' + data.usuario.foto_perfil;
+              aplicarFotoLocal(fotoUrl);
+            }
+          }
+        })
+        .catch(error => {
+          if (fotoLocal) {
+            aplicarFotoLocal(fotoLocal);
+          }
+        });
+    }
+    
+    function aplicarFotoLocal(fotoUrl) {
+      const userPhoto = document.getElementById('userPhoto');
+      if (userPhoto) {
+        userPhoto.src = fotoUrl;
+      }
+      
+      const perfilIcon = document.querySelector('img[alt="Perfil"]');
+      if (perfilIcon && perfilIcon !== userPhoto) {
+        perfilIcon.src = fotoUrl;
+        perfilIcon.style.borderRadius = '50%';
+        perfilIcon.style.width = '24px';
+        perfilIcon.style.height = '24px';
+        perfilIcon.style.objectFit = 'cover';
+      }
+    }
+
+  </script>
+</body>
+</html>

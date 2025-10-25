@@ -3,78 +3,382 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Perfil - FoodMatch</title>
   <link rel="stylesheet" href="Perfil.css">
-  <title>FoodMatch - Receitas Salvas</title>
 </head>
 <body>
   <header>
-    <div class="title">Suas receitas salvas</div>
+    <div class="title">FoodMatch</div>
     <div class="icons">
-      <div class="header-buttons">
-        <a href="doof.html" class="btn">Doof</a>
-      </div>
-      <img src="moon-solid.svg" class="lua">
+      <img src="moon-solid.svg" alt="Modo Escuro" class="lua" onclick="toggleDarkMode()">
       <div class="language-selector" onclick="toggleLanguage()">
-        <img src="https://flagcdn.com/w40/br.png" alt="BR" />
+        <img src="https://flagcdn.com/w40/br.png" alt="BR" id="currentFlag" />
         <div class="language-options" id="languageOptions">
-          <img src="https://flagcdn.com/w40/us.png" alt="EN" />
+          <img src="https://flagcdn.com/w40/br.png" alt="BR" onclick="changeLanguage('pt')" />
+          <img src="https://flagcdn.com/w40/us.png" alt="EN" onclick="changeLanguage('en')" />
         </div>
       </div>
-      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Perfil" onclick="toggleSidebar()" />
-      <div class="profile-sidebar" id="profileSidebar">
-        <div class="user">
-          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Ícone perfil" width="24">
-          <h3>Júlia Perdigão</h3> 
-        </div>
-        <a href="index.html"><button>🏠 Página Inicial</button></a>
-        <a href="Perfil.html"><button>📁 Receitas Salvas</button></a>
-        <a href="Posts.html"><button>⭐ Receitas Avaliadas</button></a>
-        <button>👥 Amigos</button>
-        <a href="Posts.html"><button>📬 Posts</button></a>
-        <a href="Doof.html"><button>🔎 Doof</button></a>
-        <hr />
-        <button>🙎‍♀️ Perfil</button>
-        <button>💼 Promover a perfil empresarial</button>
-        <button>⚙️ Configurações de perfil</button>
+      <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Perfil" onclick="toggleProfile()" style="cursor: pointer; width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+    </div>
+    <div class="profile-sidebar" id="profileSidebar">
+      <button onclick="toggleProfile()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">✕</button>
+      <div class="user">
+        <img src="user.png" alt="Ícone perfil" id="userPhoto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+        <h3 id="userName">Carregando...</h3>
       </div>
+      <a href="index.html"><button>🏠 Página Inicial</button></a>
+      <a href="Perfil.html"><button>📁 Receitas Salvas</button></a>
+      <a href="ReceitasAvaliadas.html"><button>⭐ Receitas Avaliadas</button></a>
+      <a href="Posts.html"><button>📬 Posts</button></a>
+      <a href="Doof.html"><button>🔎 Doof</button></a>
+      <hr />
+      <button onclick="window.location.href='PerfilUsuario.html'">🙎♀️ Perfil</button>
+      <button onclick="window.location.href='PerfilEmpresarial.html'">💼 Perfil Empresarial</button>
+      <button onclick="window.location.href='Publicidade.html'">📢 Gerenciar Publicidade</button>
+      <button>⚙️ Configurações de perfil</button>
+      <button onclick="logout()">🚪 Sair da Conta</button>
     </div>
   </header>
 
   <div class="main">
-    <div class="user-info">
-      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User" />
-      <span>Júlia Perdigão</span>
+    <h2>Receitas Salvas</h2>
+    
+    <div style="margin-bottom: 20px;">
+      <button onclick="criarPasta()" style="background: #e9551e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">+ Nova Pasta</button>
     </div>
 
-    <div class="filter-buttons">
-      <button>Livro de receitas</button>
-      <button>Compartilhadas</button>
-      <span class="add-button">+</span>
-    </div>
-
-    <div class="recipes">
-      <div class="recipe-card">
-        <div class="recipe-grid">
-          <img id="torta" src="https://i0.wp.com/umdocedia.com.br/wp-content/uploads/2015/04/um-doce-dia-receita-de-torta-folhada-de-queijo-com-blueberry-01.jpg?fit=650%2C794&ssl=1" alt="Torta Blueberry">
-          <img id="brownie" src="https://media.istockphoto.com/id/178634141/pt/foto/pilha-de-brownies.jpg?s=612x612&w=0&k=20&c=-2o9A6_ZA4YBIU3EEg6iDFsFDmZDd_yiUuEqv2knuJ4=" alt="Brownies">
-          <img id="bolo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJm-dLw5gy3jJUkuPV3NXWZ5A2Sxh1V4dY7A&s" alt="Doce sortido">
+    <div id="pastasContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;"></div>
+    
+    <!-- Modal para criar/editar pasta -->
+    <div id="modalPasta" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; width: 400px;">
+        <h3 id="tituloModal">Nova Pasta</h3>
+        <input type="text" id="nomePasta" placeholder="Nome da pasta" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+        <input type="file" id="fotoPasta" accept="image/*" style="margin: 10px 0;">
+        <div style="margin: 10px 0;">
+          <img id="previewFotoPasta" src="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px; display: none;">
         </div>
-        <div class="recipe-title">Sobremesas da Ju</div>
-        <div class="recipe-info">19 arquivos</div>
+        <div style="text-align: right;">
+          <button onclick="fecharModalPasta()" style="background: #ccc; color: black; border: none; padding: 8px 15px; border-radius: 5px; margin-right: 10px;">Cancelar</button>
+          <button onclick="salvarPasta()" style="background: #e9551e; color: white; border: none; padding: 8px 15px; border-radius: 5px;">Salvar</button>
+        </div>
       </div>
-
-      <div class="recipe-card">
-        <div class="recipe-grid">
-          <img id="pizza" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmfnz3YQhIcY3tsiZa5V_0AlJeMHDgxlQymQ&s" alt="Pizza" />
-          <img id="brigadeiro" src="https://www.receitasnestle.com.br/sites/default/files/srh_recipes/1a884bcbc5b04d71476d2995d51d0140.jpg" alt="Brigadeiro" />
-          <img id="hamburguer" src="https://cloudfront-us-east-1.images.arcpublishing.com/estadao/77XTHHCCLBEXLC2Y5RK4PN37CE.jpg" alt="Hamburguer artesanal" />
-        </div>
-        <div class="recipe-title">Receitas para fazer com os bests</div>
-        <div class="recipe-info">21 arquivos</div>
+    </div>
+    
+    <!-- Modal para ver receitas da pasta -->
+    <div id="modalReceitas" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; width: 600px; max-height: 80%; overflow-y: auto;">
+        <h3 id="tituloPasta">Receitas da Pasta</h3>
+        <div id="receitasDaPasta"></div>
+        <button onclick="fecharModalReceitas()" style="background: #ccc; color: black; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 10px;">Fechar</button>
       </div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    let pastaEditando = null;
+    
+    // Carregar pastas ao abrir a página
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarPastas();
+      carregarFotoUsuarioLocal();
+    });
+    
+    function carregarFotoUsuarioLocal() {
+      // Primeiro tentar localStorage
+      const fotoLocal = localStorage.getItem('user_photo');
+      if (fotoLocal) {
+        aplicarFotoLocal(fotoLocal);
+      }
+      
+      // Depois tentar servidor
+      fetch('/perfil-dados')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.usuario) {
+            document.getElementById('userName').textContent = data.usuario.nome_usuario;
+            if (data.usuario.foto_perfil) {
+              const fotoUrl = '/storage/' + data.usuario.foto_perfil;
+              aplicarFotoLocal(fotoUrl);
+              localStorage.setItem('user_photo', fotoUrl);
+            }
+          }
+        })
+        .catch(error => {
+          if (fotoLocal) {
+            aplicarFotoLocal(fotoLocal);
+          }
+        });
+    }
+    
+    function aplicarFotoLocal(fotoUrl) {
+      const userPhoto = document.getElementById('userPhoto');
+      if (userPhoto) {
+        userPhoto.src = fotoUrl;
+      }
+      
+      const perfilIcon = document.querySelector('img[alt="Perfil"]');
+      if (perfilIcon && perfilIcon !== userPhoto) {
+        perfilIcon.src = fotoUrl;
+        perfilIcon.style.borderRadius = '50%';
+        perfilIcon.style.width = '24px';
+        perfilIcon.style.height = '24px';
+        perfilIcon.style.objectFit = 'cover';
+      }
+    }
+    
+    function carregarPastas() {
+      // Carregar receitas do banco primeiro
+      fetch('/receitas-usuario')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Organizar receitas por pasta
+            const receitasPorPasta = {};
+            data.receitas.forEach(receita => {
+              const pasta = receita.pasta || 'Geral';
+              if (!receitasPorPasta[pasta]) {
+                receitasPorPasta[pasta] = [];
+              }
+              receitasPorPasta[pasta].push(receita);
+            });
+            
+            // Atualizar localStorage com dados do banco
+            const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+            pastas.forEach(pasta => {
+              if (receitasPorPasta[pasta.nome]) {
+                pasta.receitas = receitasPorPasta[pasta.nome];
+              }
+            });
+            localStorage.setItem('pastas_receitas', JSON.stringify(pastas));
+          }
+          
+          // Renderizar pastas
+          renderizarPastas();
+        })
+        .catch(error => {
+          renderizarPastas();
+        });
+    }
+    
+    function renderizarPastas() {
+      const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+      const container = document.getElementById('pastasContainer');
+      container.innerHTML = '';
+      
+      pastas.forEach((pasta, index) => {
+        const pastaDiv = document.createElement('div');
+        pastaDiv.style.cssText = 'border: 1px solid #ddd; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);';
+        
+        const img = pasta.foto ? `<img src="${pasta.foto}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 10px;">` : '<div style="width: 100%; height: 120px; background: #f0f0f0; border-radius: 5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 40px;">📁</div>';
+        
+        pastaDiv.innerHTML = `
+          ${img}
+          <h4>${pasta.nome}</h4>
+          <p>${pasta.receitas ? pasta.receitas.length : 0} receitas</p>
+          <div style="margin-top: 10px;">
+            <button onclick="editarPasta(${index})" style="background: #ffc107; color: black; border: none; padding: 5px 10px; border-radius: 3px; margin-right: 5px;">Editar</button>
+            <button onclick="excluirPasta(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Excluir</button>
+          </div>
+        `;
+        
+        pastaDiv.onclick = (e) => {
+          if (!e.target.closest('button')) {
+            abrirPasta(index);
+          }
+        };
+        
+        container.appendChild(pastaDiv);
+      });
+    }
+    
+    function criarPasta() {
+      pastaEditando = null;
+      document.getElementById('tituloModal').textContent = 'Nova Pasta';
+      document.getElementById('nomePasta').value = '';
+      document.getElementById('fotoPasta').value = '';
+      document.getElementById('previewFotoPasta').style.display = 'none';
+      document.getElementById('modalPasta').style.display = 'block';
+    }
+    
+    function editarPasta(index) {
+      const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+      const pasta = pastas[index];
+      
+      pastaEditando = index;
+      document.getElementById('tituloModal').textContent = 'Editar Pasta';
+      document.getElementById('nomePasta').value = pasta.nome;
+      
+      if (pasta.foto) {
+        document.getElementById('previewFotoPasta').src = pasta.foto;
+        document.getElementById('previewFotoPasta').style.display = 'block';
+      }
+      
+      document.getElementById('modalPasta').style.display = 'block';
+    }
+    
+    function salvarPasta() {
+      const nome = document.getElementById('nomePasta').value;
+      if (!nome.trim()) {
+        alert('Digite um nome para a pasta!');
+        return;
+      }
+      
+      const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+      const foto = document.getElementById('previewFotoPasta').src;
+      
+      if (pastaEditando !== null) {
+        pastas[pastaEditando].nome = nome;
+        if (foto) pastas[pastaEditando].foto = foto;
+      } else {
+        pastas.push({
+          nome: nome,
+          foto: foto || null,
+          receitas: [],
+          data: new Date().toLocaleDateString()
+        });
+      }
+      
+      localStorage.setItem('pastas_receitas', JSON.stringify(pastas));
+      carregarPastas();
+      fecharModalPasta();
+    }
+    
+    function excluirPasta(index) {
+      if (confirm('Tem certeza que deseja excluir esta pasta?')) {
+        const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+        pastas.splice(index, 1);
+        localStorage.setItem('pastas_receitas', JSON.stringify(pastas));
+        carregarPastas();
+      }
+    }
+    
+    function abrirPasta(index) {
+      const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+      const pasta = pastas[index];
+      
+      document.getElementById('tituloPasta').textContent = pasta.nome;
+      const container = document.getElementById('receitasDaPasta');
+      container.innerHTML = '';
+      
+      if (!pasta.receitas || pasta.receitas.length === 0) {
+        container.innerHTML = '<p>Nenhuma receita nesta pasta ainda.</p>';
+      } else {
+        pasta.receitas.forEach((receita, receitaIndex) => {
+          const receitaDiv = document.createElement('div');
+          receitaDiv.style.cssText = 'border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px; background: #f9f9f9; position: relative;';
+          receitaDiv.innerHTML = `
+            <button onclick="excluirReceita(${index}, ${receitaIndex})" style="position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 12px;">✕</button>
+            <div onclick="abrirReceita(${receitaIndex})" style="cursor: pointer; padding-right: 30px;">
+              <h5>${receita.nome}</h5>
+              <p>${Array.isArray(receita.ingredientes) ? receita.ingredientes.length : 'Vários'} ingredientes</p>
+            </div>
+          `;
+          
+          container.appendChild(receitaDiv);
+        });
+      }
+      
+      document.getElementById('modalReceitas').style.display = 'block';
+    }
+    
+    function fecharModalPasta() {
+      document.getElementById('modalPasta').style.display = 'none';
+    }
+    
+    function fecharModalReceitas() {
+      document.getElementById('modalReceitas').style.display = 'none';
+    }
+    
+    function excluirReceita(pastaIndex, receitaIndex) {
+      if (confirm('Tem certeza que deseja excluir esta receita?')) {
+        const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+        pastas[pastaIndex].receitas.splice(receitaIndex, 1);
+        localStorage.setItem('pastas_receitas', JSON.stringify(pastas));
+        abrirPasta(pastaIndex);
+        carregarPastas();
+      }
+    }
+    
+    function abrirReceita(receitaIndex) {
+      const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+      const pastaAtual = pastas.find(p => p.receitas && p.receitas.length > receitaIndex);
+      if (pastaAtual && pastaAtual.receitas[receitaIndex]) {
+        localStorage.setItem('receita_selecionada', JSON.stringify(pastaAtual.receitas[receitaIndex]));
+        window.location.href = 'Doof.html';
+      }
+    }
+    
+    // Preview da foto da pasta
+    document.getElementById('fotoPasta').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('previewFotoPasta').src = e.target.result;
+          document.getElementById('previewFotoPasta').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+
+    
+    function toggleProfile() {
+      const sidebar = document.getElementById('profileSidebar');
+      sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+    }
+    
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Carregar modo escuro salvo
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+    
+    // Carregar idioma salvo
+    const savedLang = localStorage.getItem('language');
+    if (savedLang === 'en') {
+      changeLanguage('en');
+    }
+    
+    function logout() {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        fetch('/logout', { method: 'POST' })
+          .then(() => {
+            window.location.href = '/Login.html';
+          });
+      }
+    }
+    
+    function toggleLanguage() {
+      const options = document.getElementById('languageOptions');
+      if (options) {
+        options.style.display = options.style.display === 'block' ? 'none' : 'block';
+      }
+    }
+    
+    // Sistema de tradução agora é universal via script.js
+    
+    // Chamar função de carregamento de foto
+    setInterval(carregarFotoUsuarioLocal, 3000);
+    
+    // Carregar receitas salvas do localStorage para exibir
+    const pastasExistentes = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+    if (pastasExistentes.length === 0) {
+      // Criar pasta padrão se não existir
+      const pastaDefault = {
+        nome: 'Minhas Receitas',
+        foto: null,
+        receitas: [],
+        data: new Date().toLocaleDateString()
+      };
+      localStorage.setItem('pastas_receitas', JSON.stringify([pastaDefault]));
+    }
+  </script>
 </body>
 </html>

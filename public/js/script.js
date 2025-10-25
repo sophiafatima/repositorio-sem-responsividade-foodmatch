@@ -112,13 +112,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const texto = "O que você quer cozinhar hoje?";
   let i = 0;
 
-  input.setAttribute("placeholder", "");
+  input.setAttribute("placeholder", ""); // começa vazio
 
   function digitar() {
     if (i < texto.length) {
       input.setAttribute("placeholder", texto.substring(0, i + 1));
       i++;
-      setTimeout(digitar, 80);
+      setTimeout(digitar, 80); 
     }
   }
 
@@ -151,87 +151,6 @@ document.querySelectorAll(".language-options .option-flag").forEach(flag => {
 });
 
 
-window.carregarFotoUsuario = function() {
-
-    const fotoLocal = localStorage.getItem('user_photo');
-    if (fotoLocal) {
-        aplicarFotoUsuario(fotoLocal);
-    }
-    
-
-    fetch('/perfil-dados')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.usuario) {
-
-                const userName = document.getElementById('userName');
-                if (userName) {
-                    userName.textContent = data.usuario.nome_usuario;
-                }
-                
-
-                if (data.usuario.foto_perfil) {
-                    const fotoUrl = '/storage/' + data.usuario.foto_perfil;
-                    aplicarFotoUsuario(fotoUrl);
-                }
-                
-
-                const loginLink = document.getElementById('loginLink');
-                if (loginLink) {
-                    loginLink.textContent = data.usuario.nome_usuario;
-                    loginLink.href = 'Doof.html';
-                }
-            }
-        })
-        .catch(error => {
-
-            if (fotoLocal) {
-                aplicarFotoUsuario(fotoLocal);
-            }
-        });
-}
 
 
-window.aplicarFotoUsuario = function(fotoUrl) {
 
-    const userPhoto = document.getElementById('userPhoto');
-    if (userPhoto) {
-        userPhoto.src = fotoUrl;
-    }
-    
-
-    const perfilIcon = document.querySelector('img[alt="Perfil"]');
-    if (perfilIcon && perfilIcon !== userPhoto) {
-        perfilIcon.src = fotoUrl;
-        perfilIcon.style.borderRadius = '50%';
-        perfilIcon.style.width = '24px';
-        perfilIcon.style.height = '24px';
-        perfilIcon.style.objectFit = 'cover';
-    }
-    
-
-    const userIcon = document.querySelector('.icone-login');
-    if (userIcon) {
-        userIcon.src = fotoUrl;
-        userIcon.style.borderRadius = '50%';
-        userIcon.style.objectFit = 'cover';
-    }
-    
-
-    const fotoPerfil = document.getElementById('fotoPerfil');
-    if (fotoPerfil) {
-        fotoPerfil.src = fotoUrl;
-    }
-}
-
-
-setTimeout(() => {
-    carregarFotoUsuario();
-}, 500);
-
-
-setInterval(() => {
-    if (document.readyState === 'complete') {
-        carregarFotoUsuario();
-    }
-}, 2000);

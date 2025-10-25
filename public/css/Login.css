@@ -144,21 +144,6 @@ body {
   text-decoration: none;
 }
 
-.links {
-  text-align: center;
-  margin: 15px 0;
-}
-
-.links a {
-  color: #f24e1e;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.links a:hover {
-  text-decoration: underline;
-}
-
 a{
 text-decoration: none;
 color:white;

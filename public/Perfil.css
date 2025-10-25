@@ -1,125 +1,39 @@
-@import url(https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap);
-
-body, header, .btn, .profile-sidebar, .recipe-card, .filter-buttons button {
-    transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.3s ease, border 0.3s ease;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
 }
-
 
 body {
-    background-color: #fff3e5;
-    font-family: 'Inter', sans-serif;
-    color: #000;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    align-items: flex-start;
-    position: relative;
+h1, h2, h3 {
+  font-weight: 600;
+  line-height: 1.4;
 }
 
+p, li, span, input, textarea {
+  font-weight: 400;
+  line-height: 1.6;
+}
 
-main {
-    text-align: center;
-    margin-top: 30px;
-    position: relative;
-    z-index: 1;
+body {
+  background-color: #f9f9f9;
+  color: #222;
+  min-height: 100vh;
+  transition: background-color 0.6s ease, color 0.6s ease;
 }
 
 body.dark-mode {
-    background-color: #181818;
-    color: #FF5722;
+  background-color: #181818;
+  color: #f5f5f5;
 }
-
-body.dark-mode .titulo .palavra {
-    text-shadow: 6px 6px rgba(0, 0, 0, 0.5);
-}
-
-.dark-mode .botao-login {
-    background-color: #F7F7F7;
-    color: white;
-}
-
-body.dark-mode .lua {
-    filter: brightness(0) invert(1);
-}
-
-.dark-mode .icone-busca a,
-button,
-.busca {
-    border: none;
-    background-color: #fffaf3;
-}
-
-body.dark-mode .language-selector img {
-    background-color: transparent;
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
-}
-
-.language-selector {
-    position: relative;
-}
-
-.language-selector img {
-    width: 40px;
-    height: auto;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
-    background-color: transparent;
-}
-
-.language-selector img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.language-options {
-    position: absolute;
-    top: 30px;
-    left: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 999;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.language-options.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.lua {
-  width: 20px;
-  height: auto;
-  cursor: pointer;
-}
-
-.dark-mode .user h3{
-  color: #444;
-}
-
-body {
-  background-color: #fdf1dd;
-}
-
 
 header {
   background-color: #ef5621;
@@ -128,21 +42,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-
-.btn {
-  background-color: white;
-  color: #e9551e;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.btn:hover {
-  background-color: #f0f0f0;
 }
 
 .title {
@@ -163,18 +62,57 @@ header {
   cursor: pointer;
 }
 
+.language-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.language-selector img {
+  width: 32px;
+  height: auto;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.language-options {
+  position: absolute;
+  top: 35px;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: none;
+  z-index: 1000;
+}
+
+body.dark-mode .language-options {
+  background: #333;
+  border-color: #555;
+}
+
+.lua {
+  width: 20px;
+  height: auto;
+  cursor: pointer;
+}
+
+body.dark-mode .lua {
+  filter: brightness(0) invert(1);
+}
+
 .profile-sidebar {
   position: absolute;
   top: 70px;
   right: 10px;
   width: 250px;
-  background-color: #e3e3e3;
+  background-color: #efefef;
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: 12px;
   display: none;
   flex-direction: column;
   gap: 0.8rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
@@ -185,104 +123,181 @@ header {
   font-weight: bold;
 }
 
+.profile-sidebar .user img {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
 .profile-sidebar button {
   background: none;
   border: none;
   text-align: left;
-  padding: 0.5rem;
+  padding: 0.6rem;
   cursor: pointer;
   font-size: 1rem;
+  border-radius: 8px;
+  transition: background 0.3s ease;
 }
 
+.profile-sidebar button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.profile-sidebar .user {
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-sidebar button {
+  width: 100%;
+  margin: 3px 0;
+  padding: 8px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.profile-sidebar a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body.dark-mode .profile-sidebar {
+  background-color: #2a2a2a;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .profile-sidebar button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 
 .main {
   padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+.main h2 {
+  color: #e9551e;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.user-info img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.perfil-container {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.6s ease;
 }
 
+body.dark-mode .perfil-container {
+  background: #2a2a2a;
+}
 
-.filter-buttons {
-  display: flex;
-  gap: 1rem;
+.foto-perfil {
+  text-align: center;
   margin-bottom: 2rem;
 }
 
-.filter-buttons button {
+.foto-perfil img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #e9551e;
+  margin-bottom: 1rem;
+}
+
+.foto-perfil input {
+  background: #e9551e;
+  color: white;
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 20px;
-  background-color: #f5f5f5;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-
-.recipes {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+.form-group {
+  margin-bottom: 1.5rem;
 }
 
-.recipe-card {
-  width: 200px;
-}
-
-
-.recipe-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: 5px;
-}
-
-
-.recipe-grid img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
-}
-
-.recipe-grid #torta, #pizza {
-  grid-column: 1;
-  grid-row: 1 / span 2; 
-}
-
-.recipe-grid #brownie, #brigadeiro {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.recipe-grid #bolo, #hamburguer {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-
-
-
-.recipe-title {
-  margin-top: 0.5rem;
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: bold;
+  color: #333;
 }
 
-.recipe-info {
-  font-size: 0.8rem;
-  color: #555;
+body.dark-mode .form-group label {
+  color: #ddd;
 }
 
-.add-button {
-  font-size: 2rem;
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #e9551e;
+  outline: none;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group textarea {
+  background: #333;
+  color: white;
+  border-color: #555;
+}
+
+.form-group textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.btn {
+  background: #e9551e;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  margin-left: 2rem;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 1rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background: #cf4a18;
+  transform: translateY(-2px);
+}
+
+.btn-logout {
+  background: #dc3545;
+}
+
+.btn-logout:hover {
+  background: #c82333;
+}
+
+.message {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  display: none;
+  text-align: center;
+  font-weight: bold;
 }

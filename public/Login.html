@@ -8,10 +8,19 @@
   <link rel="stylesheet" href="Login.css" />
 </head>
 <body>
-  <img src="moon-solid.svg" class="lua" />
+  <div style="position: absolute; top: 20px; right: 60px; display: flex; gap: 15px; align-items: center;">
+    <div class="language-selector" onclick="toggleLanguage()">
+      <img src="https://flagcdn.com/w40/br.png" alt="BR" id="currentFlag" style="width: 32px; border-radius: 4px; cursor: pointer;" />
+      <div class="language-options" id="languageOptions" style="position: absolute; top: 35px; left: 0; background: white; border: 1px solid #ddd; border-radius: 4px; display: none; z-index: 1000;">
+        <img src="https://flagcdn.com/w40/br.png" alt="BR" onclick="changeLanguage('pt')" style="width: 32px; border-radius: 4px; cursor: pointer; display: block;" />
+        <img src="https://flagcdn.com/w40/us.png" alt="EN" onclick="changeLanguage('en')" style="width: 32px; border-radius: 4px; cursor: pointer; display: block;" />
+      </div>
+    </div>
+    <img src="moon-solid.svg" class="lua" />
+  </div>
 
   <div class="login-container">
-    <form class="login-box" action="/login" method="POST">
+    <form class="login-box" id="loginForm">
       <h2>Login</h2>
       
       <div id="message" style="display: none; padding: 10px; margin: 10px 0; border-radius: 5px;"></div>
@@ -24,13 +33,122 @@
 
       <button type="submit">Entrar</button>
 
-      <div class="ajuda">Precisa de ajuda?</div>
+      <div class="links">
+        <a href="#" onclick="abrirRedefinirSenha()">Esqueceu a senha?</a>
+      </div>
 
       <div class="cadastro">
-        Não tem uma conta? <a href="/cadastro">Cadastre-se</a>
+        Não tem uma conta? <a href="Cadastro.html">Cadastre-se</a>
       </div>
     </form>
   </div>
-  <script src="script.js"></script>
+
+  <!-- Modal Redefinir Senha -->
+  <div id="modalRedefinirSenha" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 400px;">
+      <h3>Redefinir Senha</h3>
+      <p style="margin: 10px 0; color: #666;">Digite seu email para receber as instruções de redefinição de senha.</p>
+      
+      <div id="messageReset" style="display: none; padding: 10px; margin: 10px 0; border-radius: 5px;"></div>
+      
+      <input type="email" id="emailReset" placeholder="Seu email" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+      
+      <div style="text-align: right; margin-top: 20px;">
+        <button onclick="fecharRedefinirSenha()" style="background: #ccc; color: black; border: none; padding: 10px 15px; border-radius: 5px; margin-right: 10px;">Cancelar</button>
+        <button onclick="enviarRedefinicao()" style="background: #e9551e; color: white; border: none; padding: 10px 15px; border-radius: 5px;">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const messageDiv = document.getElementById('message');
+      
+      fetch('/login-teste?email=' + encodeURIComponent(email) + '&senha=' + encodeURIComponent(senha), {
+        method: 'GET'
+      })
+      .then(response => {
+        console.log('Status:', response.status);
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        messageDiv.style.display = 'block';
+        if (data.success) {
+          messageDiv.style.backgroundColor = '#d4edda';
+          messageDiv.style.color = '#155724';
+          messageDiv.textContent = data.message;
+          window.location.href = 'Doof.html';
+        } else {
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.textContent = data.message + (data.debug ? ' | Debug: ' + data.debug : '');
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        messageDiv.style.display = 'block';
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.textContent = 'Erro ao processar login: ' + error.message;
+      });
+    });
+    
+    // Sistema de tradução agora é universal via script.js
+    
+    function abrirRedefinirSenha() {
+      document.getElementById('modalRedefinirSenha').style.display = 'block';
+    }
+    
+    function fecharRedefinirSenha() {
+      document.getElementById('modalRedefinirSenha').style.display = 'none';
+      document.getElementById('emailReset').value = '';
+      document.getElementById('messageReset').style.display = 'none';
+    }
+    
+    function enviarRedefinicao() {
+      const email = document.getElementById('emailReset').value;
+      const messageDiv = document.getElementById('messageReset');
+      
+      if (!email) {
+        messageDiv.style.display = 'block';
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.textContent = 'Digite seu email!';
+        return;
+      }
+      
+      fetch('/redefinir-senha?email=' + encodeURIComponent(email))
+      .then(response => response.json())
+      .then(data => {
+        messageDiv.style.display = 'block';
+        if (data.success) {
+          messageDiv.style.backgroundColor = '#d4edda';
+          messageDiv.style.color = '#155724';
+          messageDiv.textContent = data.message;
+          setTimeout(() => {
+            fecharRedefinirSenha();
+            window.location.href = data.redirect;
+          }, 2000);
+        } else {
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.textContent = data.message || 'Email não encontrado!';
+        }
+      })
+      .catch(error => {
+        messageDiv.style.display = 'block';
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.textContent = 'Erro ao enviar email!';
+      });
+    }
+  </script>
 </body>
 </html>

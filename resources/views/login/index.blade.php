@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>Login - FoodMatch</title>
-  <link rel="stylesheet" href="{{ asset('Login.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/Login.css') }}" />
 </head>
 <body>
   <img src="{{ asset('moon-solid.svg') }}" class="lua" />
@@ -42,6 +42,6 @@
       </div>
     </form>
   </div>
-  <script src="{{ asset('script.js') }}"></script>
+  <script src="{{ asset('js/script.js') }}"></script>
 </body>
 </html>

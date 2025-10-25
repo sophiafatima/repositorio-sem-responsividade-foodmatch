@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodMatch - Gerenciar Publicidade</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #fff3e5; font-family: Arial, sans-serif; }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      align-items: center;
+    }
+    
+    .title { font-size: 1.5rem; font-weight: bold; }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .btn {
+      background: #e9551e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    
+    .btn:hover { background: #d44a1a; }
+    
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .form-group {
+      margin: 15px 0;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    
+    .anuncio-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    
+    .anuncio-info h4 { color: #e9551e; }
+    .anuncio-actions { display: flex; gap: 10px; }
+    
+    .status-ativo { color: green; font-weight: bold; }
+    .status-inativo { color: red; font-weight: bold; }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Gerenciar Publicidade</div>
+    <button onclick="window.location.href='index.html'" class="btn">🏠 Voltar</button>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>📊 Painel de Publicidade</h2>
+      <button onclick="abrirModalCriar()" class="btn">➕ Criar Novo Anúncio</button>
+      
+      <div id="estatisticas" style="display: flex; gap: 20px; margin: 20px 0;">
+        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; text-align: center;">
+          <h3 id="totalAnuncios">0</h3>
+          <p>Total de Anúncios</p>
+        </div>
+        <div style="background: #f0fff0; padding: 15px; border-radius: 8px; text-align: center;">
+          <h3 id="anunciosAtivos">0</h3>
+          <p>Anúncios Ativos</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Lista de Anúncios</h3>
+      <div id="listaAnuncios"></div>
+    </div>
+  </div>
+
+  <!-- Modal Criar Anúncio -->
+  <div id="modalCriar" class="modal">
+    <div class="modal-content">
+      <h3>➕ Criar Novo Anúncio</h3>
+      
+      <div class="form-group">
+        <label>Título:</label>
+        <input type="text" id="titulo" placeholder="Título do anúncio">
+      </div>
+      
+      <div class="form-group">
+        <label>Descrição:</label>
+        <textarea id="descricao" placeholder="Descrição do anúncio"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>URL da Imagem:</label>
+        <input type="url" id="imagem" placeholder="https://exemplo.com/imagem.jpg">
+      </div>
+      
+      <div class="form-group">
+        <label>Link de Destino:</label>
+        <input type="url" id="link" placeholder="https://exemplo.com">
+      </div>
+      
+      <div class="form-group">
+        <label>Tipo de Anúncio:</label>
+        <select id="tipo">
+          <option value="banner">Banner</option>
+          <option value="popup">Pop-up</option>
+          <option value="lateral">Lateral</option>
+          <option value="rodape">Rodapé</option>
+        </select>
+      </div>
+      
+      <div style="text-align: right; margin-top: 20px;">
+        <button onclick="fecharModal()" style="background: #ccc; color: black;">Cancelar</button>
+        <button onclick="criarAnuncio()" class="btn">Criar Anúncio</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', carregarAnuncios);
+
+    function abrirModalCriar() {
+      document.getElementById('modalCriar').style.display = 'block';
+    }
+
+    function fecharModal() {
+      document.getElementById('modalCriar').style.display = 'none';
+      limparFormulario();
+    }
+
+    function limparFormulario() {
+      document.getElementById('titulo').value = '';
+      document.getElementById('descricao').value = '';
+      document.getElementById('imagem').value = '';
+      document.getElementById('link').value = '';
+      document.getElementById('tipo').value = 'banner';
+    }
+
+    function criarAnuncio() {
+      const dados = {
+        titulo: document.getElementById('titulo').value,
+        descricao: document.getElementById('descricao').value,
+        imagem: document.getElementById('imagem').value,
+        link: document.getElementById('link').value,
+        tipo: document.getElementById('tipo').value
+      };
+
+      if (!dados.titulo || !dados.descricao) {
+        alert('Preencha título e descrição!');
+        return;
+      }
+
+      fetch('/publicidade/criar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Anúncio criado com sucesso!');
+          fecharModal();
+          carregarAnuncios();
+        }
+      })
+      .catch(() => {
+        // Fallback para localStorage
+        const anuncios = JSON.parse(localStorage.getItem('anuncios') || '[]');
+        dados.id = Date.now();
+        dados.status = 'ativo';
+        dados.data_criacao = new Date().toLocaleDateString();
+        anuncios.push(dados);
+        localStorage.setItem('anuncios', JSON.stringify(anuncios));
+        
+        alert('Anúncio criado com sucesso!');
+        fecharModal();
+        carregarAnuncios();
+      });
+    }
+
+    function carregarAnuncios() {
+      fetch('/publicidade/listar')
+        .then(response => response.json())
+        .then(anuncios => exibirAnuncios(anuncios))
+        .catch(() => {
+          // Fallback para localStorage
+          const anuncios = JSON.parse(localStorage.getItem('anuncios') || '[]');
+          exibirAnuncios(anuncios);
+        });
+    }
+
+    function exibirAnuncios(anuncios) {
+      const lista = document.getElementById('listaAnuncios');
+      const total = anuncios.length;
+      const ativos = anuncios.filter(a => a.status === 'ativo').length;
+
+      document.getElementById('totalAnuncios').textContent = total;
+      document.getElementById('anunciosAtivos').textContent = ativos;
+
+      if (anuncios.length === 0) {
+        lista.innerHTML = '<p>Nenhum anúncio cadastrado</p>';
+        return;
+      }
+
+      lista.innerHTML = anuncios.map(anuncio => `
+        <div class="anuncio-item">
+          <div class="anuncio-info">
+            <h4>${anuncio.titulo}</h4>
+            <p>${anuncio.descricao}</p>
+            <small>Tipo: ${anuncio.tipo} | Status: <span class="status-${anuncio.status}">${anuncio.status}</span></small>
+          </div>
+          <div class="anuncio-actions">
+            <button onclick="alterarStatus(${anuncio.id}, '${anuncio.status === 'ativo' ? 'inativo' : 'ativo'}')" class="btn">
+              ${anuncio.status === 'ativo' ? '⏸️ Pausar' : '▶️ Ativar'}
+            </button>
+            <button onclick="deletarAnuncio(${anuncio.id})" style="background: #dc3545;">🗑️ Excluir</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function alterarStatus(id, novoStatus) {
+      fetch(`/publicidade/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: novoStatus })
+      })
+      .then(() => carregarAnuncios())
+      .catch(() => {
+        // Fallback para localStorage
+        const anuncios = JSON.parse(localStorage.getItem('anuncios') || '[]');
+        const anuncio = anuncios.find(a => a.id == id);
+        if (anuncio) {
+          anuncio.status = novoStatus;
+          localStorage.setItem('anuncios', JSON.stringify(anuncios));
+          carregarAnuncios();
+        }
+      });
+    }
+
+    function deletarAnuncio(id) {
+      if (!confirm('Tem certeza que deseja excluir este anúncio?')) return;
+
+      fetch(`/publicidade/${id}`, { method: 'DELETE' })
+        .then(() => carregarAnuncios())
+        .catch(() => {
+          // Fallback para localStorage
+          const anuncios = JSON.parse(localStorage.getItem('anuncios') || '[]');
+          const novosAnuncios = anuncios.filter(a => a.id != id);
+          localStorage.setItem('anuncios', JSON.stringify(novosAnuncios));
+          carregarAnuncios();
+        });
+    }
+  </script>
+</body>
+</html>

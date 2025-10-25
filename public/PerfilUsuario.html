@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil - FoodMatch</title>
+  <link rel="stylesheet" href="Perfil.css">
+  <style>
+    .foto-perfil {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .foto-perfil img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #e9551e;
+      cursor: pointer;
+    }
+    .foto-perfil img:hover {
+      opacity: 0.8;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .btn {
+      background: #e9551e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .btn:hover {
+      background: #d44a1a;
+    }
+    .btn-logout {
+      background: #dc3545;
+    }
+    .btn-logout:hover {
+      background: #c82333;
+    }
+    .profile-sidebar {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      min-width: 250px;
+    }
+    .profile-sidebar .user {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .profile-sidebar .user img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+    }
+    .profile-sidebar button {
+      width: 100%;
+      margin: 3px 0;
+      padding: 8px;
+      border: none;
+      background: #f5f5f5;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .profile-sidebar button:hover {
+      background: #e9ecef;
+    }
+    .profile-sidebar a {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">Perfil do Usuário</div>
+    <div class="icons">
+      <img src="moon-solid.svg" alt="Modo Escuro" class="lua">
+      <div style="position: relative; display: inline-block;">
+        <img src="https://flagcdn.com/w40/br.png" alt="BR" id="currentFlag" onclick="toggleLanguage()" style="width: 24px; height: 24px; cursor: pointer;" />
+        <div id="languageOptions" style="display: none; position: absolute; top: 30px; left: 0; background: white; border: 1px solid #ccc; border-radius: 5px; padding: 5px; z-index: 10000; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+          <img src="https://flagcdn.com/w40/br.png" alt="BR" onclick="changeLanguage('pt')" style="display: block; margin: 2px 0; width: 32px; cursor: pointer;" />
+          <img src="https://flagcdn.com/w40/us.png" alt="EN" onclick="changeLanguage('en')" style="display: block; margin: 2px 0; width: 32px; cursor: pointer;" />
+        </div>
+      </div>
+      <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Perfil" onclick="togglePerfil()" style="cursor: pointer;">
+      <div class="profile-sidebar" id="profileSidebar">
+        <div class="user">
+          <img src="user.png" alt="Ícone perfil" id="userPhoto">
+          <h3 id="userNameSidebar">Carregando...</h3> 
+        </div>
+        <a href="index.html"><button>🏠 Página Inicial</button></a>
+        <a href="Perfil.html"><button>📁 Receitas Salvas</button></a>
+        <a href="ReceitasAvaliadas.html"><button>⭐ Receitas Avaliadas</button></a>
+        <a href="Posts.html"><button>📬 Posts</button></a>
+        <a href="Doof.html"><button>🔎 Doof</button></a>
+        <hr />
+        <button onclick="window.location.href='PerfilUsuario.html'">🙎‍♀️ Perfil</button>
+        <button>💼 Promover a perfil empresarial</button>
+        <button>⚙️ Configurações de perfil</button>
+        <button onclick="logout()">🚪 Sair da Conta</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <h2>Meu Perfil</h2>
+    
+    <div class="perfil-container">
+      <div class="foto-perfil">
+        <img src="user.png" alt="Foto do Perfil" id="fotoPerfil" onclick="document.getElementById('inputFoto').click()" title="Clique para alterar a foto">
+        <input type="file" id="inputFoto" accept="image/*" onchange="uploadFoto()" style="display: none;">
+        <button type="button" onclick="document.getElementById('inputFoto').click()" style="margin-top: 10px; padding: 8px 15px; background: #e9551e; color: white; border: none; border-radius: 5px; cursor: pointer;">Alterar Foto</button>
+      </div>
+      
+      <form id="perfilForm">
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email">
+        </div>
+        
+        <div class="form-group">
+          <label for="descricao">Descrição:</label>
+          <textarea id="descricao" name="descricao" placeholder="Conte um pouco sobre você..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="restricoes">Restrições Alimentares:</label>
+          <textarea id="restricoes" name="restricoes" placeholder="Ex: Vegetariano, intolerante à lactose..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn">Salvar Alterações</button>
+        <button type="button" class="btn btn-logout" onclick="logout()">Sair da Conta</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarDadosUsuario();
+    });
+
+    function carregarDadosUsuario() {
+      fetch('/perfil-dados')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.usuario) {
+            document.getElementById('nome').value = data.usuario.nome_usuario || '';
+            document.getElementById('email').value = data.usuario.email_usuario || '';
+            document.getElementById('descricao').value = data.usuario.descricao || '';
+            document.getElementById('restricoes').value = data.usuario.restricoes || '';
+            
+            // Atualizar foto de perfil
+            if (data.usuario.foto_perfil) {
+              const fotoUrl = '/storage/' + data.usuario.foto_perfil;
+              document.getElementById('fotoPerfil').src = fotoUrl;
+              document.getElementById('userPhoto').src = fotoUrl;
+              
+              // Atualizar ícone do perfil no header
+              const perfilIcon = document.querySelector('img[alt="Perfil"]');
+              if (perfilIcon && perfilIcon !== document.getElementById('userPhoto')) {
+                perfilIcon.src = fotoUrl;
+                perfilIcon.style.borderRadius = '50%';
+                perfilIcon.style.width = '24px';
+                perfilIcon.style.height = '24px';
+                perfilIcon.style.objectFit = 'cover';
+              }
+            }
+            
+            // Atualizar nome no sidebar
+            document.getElementById('userNameSidebar').textContent = data.usuario.nome_usuario;
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao carregar dados:', error);
+        });
+    }
+
+    function uploadFoto() {
+      const input = document.getElementById('inputFoto');
+      const file = input.files[0];
+      
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const fotoBase64 = e.target.result;
+          
+          // Salvar no localStorage temporariamente
+          localStorage.setItem('user_photo', fotoBase64);
+          
+          // Atualizar todas as imagens imediatamente
+          document.getElementById('fotoPerfil').src = fotoBase64;
+          const userPhoto = document.getElementById('userPhoto');
+          if (userPhoto) {
+            userPhoto.src = fotoBase64;
+          }
+          
+          const perfilIcon = document.querySelector('img[alt="Perfil"]');
+          if (perfilIcon && perfilIcon !== userPhoto) {
+            perfilIcon.src = fotoBase64;
+            perfilIcon.style.borderRadius = '50%';
+            perfilIcon.style.width = '24px';
+            perfilIcon.style.height = '24px';
+            perfilIcon.style.objectFit = 'cover';
+          }
+          
+          // Tentar salvar no servidor
+          const params = new URLSearchParams({
+            foto_base64: fotoBase64
+          });
+          
+          fetch('/upload-foto-teste?' + params.toString())
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              console.log('Foto salva no servidor');
+            } else {
+              console.log('Erro no servidor, mas foto salva localmente');
+            }
+          })
+          .catch(error => {
+            console.log('Servidor indisponível, foto salva localmente');
+          });
+          
+          alert('Foto atualizada!');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    document.getElementById('perfilForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        email_usuario: document.getElementById('email').value,
+        descricao: document.getElementById('descricao').value,
+        restricoes: document.getElementById('restricoes').value
+      };
+      
+      const params = new URLSearchParams(formData);
+      
+      fetch('/salvar-perfil-teste?' + params.toString())
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Perfil atualizado com sucesso!');
+          } else {
+            alert('Erro ao salvar: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Erro ao salvar perfil.');
+        });
+    });
+
+    function toggleLanguage() {
+      const options = document.getElementById('languageOptions');
+      if (options) {
+        if (options.style.display === 'block') {
+          options.style.display = 'none';
+        } else {
+          options.style.display = 'block';
+        }
+      }
+    }
+    
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      
+      const currentFlag = document.getElementById('currentFlag');
+      if (currentFlag) {
+        if (lang === 'en') {
+          currentFlag.src = 'https://flagcdn.com/w40/us.png';
+          currentFlag.alt = 'EN';
+        } else {
+          currentFlag.src = 'https://flagcdn.com/w40/br.png';
+          currentFlag.alt = 'BR';
+        }
+      }
+      
+      const options = document.getElementById('languageOptions');
+      if (options) options.style.display = 'none';
+      
+      location.reload();
+    }
+
+    function togglePerfil() {
+      const sidebar = document.getElementById('profileSidebar');
+      sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function logout() {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        fetch('/logout', { method: 'POST' })
+          .then(() => {
+            window.location.href = '/Login.html';
+          });
+      }
+    }
+    
+    // Fechar sidebar ao clicar fora
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('profileSidebar');
+      const profileIcon = e.target.closest('img[alt="Perfil"]');
+      
+      if (sidebar && !sidebar.contains(e.target) && !profileIcon) {
+        sidebar.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap');
 
 
 body,
@@ -17,22 +17,6 @@ button,
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
-}
-
-body {
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-h1, h2, h3 {
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-p, li, span {
-  font-weight: 400;
-  line-height: 1.6;
 }
 
 header {
@@ -57,66 +41,8 @@ body {
 }
 
 body.dark-mode {
-  background-color: #1a1a1a;
-  color: #e8e8e8;
-}
-
-body.dark-mode .modal-content {
-  background-color: #2a2a2a;
-  color: #e8e8e8;
-}
-
-body.dark-mode .close {
-  color: #ccc;
-}
-
-body.dark-mode input {
-  background-color: #333;
-  color: #e8e8e8;
-  border: 1px solid #555;
-}
-
-body.dark-mode input::placeholder {
-  color: #aaa;
-}
-
-/* Estilos universais para modo escuro */
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode h5,
-body.dark-mode h6 {
-  color: #f0f0f0;
-}
-
-body.dark-mode p,
-body.dark-mode span,
-body.dark-mode li {
-  color: #e0e0e0;
-}
-
-body.dark-mode .modal {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-body.dark-mode .modal-content {
-  background: #2a2a2a;
-  color: #e8e8e8;
-}
-
-body.dark-mode .modal-content h2,
-body.dark-mode .modal-content h3 {
-  color: #ff7043;
-}
-
-body.dark-mode button {
-  background: #ff7043;
-  color: white;
-}
-
-body.dark-mode button:hover {
-  background: #ff5722;
+  background-color: #181818;
+  color: #f5f5f5;
 }
 
 body.dark-mode .lua {
@@ -264,11 +190,6 @@ body.dark-mode .sidebar ul li a:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.language-selector img:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
 .language-options {
   position: absolute;
   top: 40px;
@@ -278,19 +199,10 @@ body.dark-mode .sidebar ul li a:hover {
   border-radius: 6px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
   z-index: 999;
-  display: none;
-  padding: 5px;
-}
-
-.language-options img {
-  display: block;
-  margin: 2px 0;
-  width: 32px;
-}
-
-body.dark-mode .language-options {
-  background-color: #333;
-  border-color: #555;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .language-options.show {
@@ -319,13 +231,6 @@ body.dark-mode .language-options {
   align-items: center;
   gap: 0.5rem;
   font-weight: bold;
-}
-
-.profile-sidebar .user img {
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
 }
 
 .profile-sidebar button {

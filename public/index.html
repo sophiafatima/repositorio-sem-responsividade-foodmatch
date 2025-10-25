@@ -22,9 +22,18 @@
                 </div>
             </div>
             <button class="botao-login">
-                <img src="user.png" class="icone-login">
-                <a href="Login.html">Login</a>
+                <img src="user.png" class="icone-login" onclick="toggleSidebar()">
+                <a href="Login.html" id="loginLink">Login</a>
             </button>
+            <div class="profile-sidebar" id="profileSidebar" style="display: none;">
+                <div class="user">
+                    <img src="user.png" alt="Ícone perfil" id="userPhoto">
+                    <h3 id="userName">Admin</h3>
+                </div>
+                <a href="PerfilEmpresarial.html"><button>💼 Perfil Empresarial</button></a>
+                <a href="Publicidade.html"><button>📢 Gerenciar Publicidade</button></a>
+                <a href="suporte.html"><button>🎧 Suporte</button></a>
+            </div>
         </div>
     </header>
 

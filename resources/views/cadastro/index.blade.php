@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>Cadastro - FoodMatch</title>
-  <link rel="stylesheet" href="{{ asset('Cadastro.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/Cadastro.css') }}" />
 </head>
 <body>
   <img src="{{ asset('moon-solid.svg') }}" class="lua" />
@@ -48,7 +48,7 @@
       </div>
     </form>
   </div>
-  <script src="{{ asset('script.js') }}"></script>
+  <script src="{{ asset('js/script.js') }}"></script>
   <script>
     document.querySelector('form').addEventListener('submit', function(e) {
       const senha = document.getElementById('senha').value;

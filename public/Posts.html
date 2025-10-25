@@ -5,6 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FoodMatch - Posts</title>
   <link rel="stylesheet" href="Posts.css" />
+  <style>
+    .criar-post {
+      text-align: center;
+      margin: 20px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #e9551e, #ff7043);
+      border-radius: 15px;
+    }
+    .btn-criar-tutorial {
+      background: white;
+      color: #e9551e;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-criar-tutorial:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .post-box, .receita-box {
+      height: calc(100vh - 200px);
+      min-height: 500px;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -14,75 +45,243 @@
         <a href="doof.html" class="btn">Doof</a>
       </div>
       <img src="moon-solid.svg" class="lua">
-      <div class="language-selector" onclick="toggleLanguage()">
-        <img src="https://flagcdn.com/w40/br.png" alt="BR" />
-        <div class="language-options" id="languageOptions">
-          <img src="https://flagcdn.com/w40/us.png" alt="EN" />
+      <div style="position: relative; display: inline-block;">
+        <img src="https://flagcdn.com/w40/br.png" alt="BR" id="currentFlag" onclick="toggleLanguage()" style="width: 24px; height: 24px; cursor: pointer;" />
+        <div id="languageOptions" style="display: none; position: absolute; top: 30px; left: 0; background: white; border: 1px solid #ccc; border-radius: 5px; padding: 5px; z-index: 10000; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+          <img src="https://flagcdn.com/w40/br.png" alt="BR" onclick="changeLanguage('pt')" style="display: block; margin: 2px 0; width: 32px; cursor: pointer;" />
+          <img src="https://flagcdn.com/w40/us.png" alt="EN" onclick="changeLanguage('en')" style="display: block; margin: 2px 0; width: 32px; cursor: pointer;" />
         </div>
       </div>
-      <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Perfil" onclick="toggleSidebar()" />
+      <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Perfil" onclick="toggleSidebar()" style="cursor: pointer; width: 24px; height: 24px; border-radius: 50%; object-fit: cover;" />
       <div class="profile-sidebar" id="profileSidebar">
+        <button onclick="toggleSidebar()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">✕</button>
         <div class="user">
-          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Ícone perfil" width="24">
-          <h3>Júlia Perdigão</h3> 
+          <img src="user.png" alt="Ícone perfil" id="userPhoto">
+          <h3 id="userName">Carregando...</h3> 
         </div>
         <a href="index.html"><button>🏠 Página Inicial</button></a>
         <a href="Perfil.html"><button>📁 Receitas Salvas</button></a>
-        <a href="Posts.html"><button>⭐ Receitas Avaliadas</button></a>
-        <button>👥 Amigos</button>
+        <a href="ReceitasAvaliadas.html"><button>⭐ Receitas Avaliadas</button></a>
         <a href="Posts.html"><button>📬 Posts</button></a>
         <a href="Doof.html"><button>🔎 Doof</button></a>
         <hr />
-        <button>🙎‍♀️ Perfil</button>
-        <button>💼 Promover a perfil empresarial</button>
+        <button onclick="window.location.href='PerfilUsuario.html'">🙎♀️ Perfil</button>
+        <button onclick="window.location.href='PerfilEmpresarial.html'">💼 Perfil Empresarial</button>
+        <button onclick="window.location.href='Publicidade.html'">📢 Gerenciar Publicidade</button>
         <button>⚙️ Configurações de perfil</button>
+        <button onclick="logout()">🚪 Sair da Conta</button>
       </div>
     </div>
   </header>
 
   <main class="container">
     
-    <section id="post">
-      <h2>PIZZA SEM TRIGO <span id="rating">5.0 ★★★★★</span></h2>
+    <!-- Botão para postar tutorial -->
+    <section class="criar-post">
+      <button onclick="abrirModalTutorial()" class="btn-criar-tutorial">
+        🎥 Postar Meu Tutorial
+      </button>
+    </section>
+    
+    <section class="post-box">
+      <div class="post" data-post-id="1">
+      <h2>PIZZA SEM TRIGO <span class="rating">5.0 ★★★★★</span></h2>
       <div class="author">
         <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
-    
         <div>
           <strong>Isabela Bigarelli</strong><br />
           <span class="tempo">Semana passada</span>
         </div>
       </div>
       <img class="video-thumb" src="https://daniellychavesblog.wordpress.com/wp-content/uploads/2017/06/cozinhar1.jpg" alt="Vídeo da receita" />
-      <br>
-      <div class="icons">👍 120 | 💬 32 | ⚠️</div>
-
-
-
-      <div class="comentario">
-        <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
-        <div>
-          <strong>Júlia Perdigão</strong><br />
-          <span class="tempo">Semana retrasada</span><br />
-          <h3 class="estrelas">★★★★★</h3><br />
-          <h4>Serviço excelente!!!</h4>
-        </div>
-        <div class="icons">👍 120 | 💬 32 | ⚠️</div>
+      
+      <div class="post-actions">
+        <button onclick="curtirPost(1)" class="btn-like" id="like-post-1">👍 <span id="likes-post-1">120</span></button>
+        <button onclick="toggleComentarios(1)" class="btn-comment">💬 <span id="comments-post-1">32</span></button>
+        <button onclick="avaliarPost(1)" class="btn-rate">⭐ Avaliar</button>
+        <button onclick="denunciarPost(1)" class="btn-report">⚠️ Denunciar</button>
       </div>
-
-      <div class="comentario">
-        <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
-        <div>
-          <strong>Yoga Prata</strong><br />
-          <span class="tempo">Semana retrasada</span><br />
-         <h3 class="estrelas">★★★★★</h3> <br />
-          <h4>Só receitas maravilhosas!!!</h4>
+      
+      <div class="comentarios-section" id="comentarios-1">
+        <div class="add-comment">
+          <input type="text" id="comment-input-1" placeholder="Adicione um comentário..." />
+          <button onclick="adicionarComentario(1)">Enviar</button>
         </div>
-        <div class="icons">👍 47 | 💬 9 | ⚠️</div>
+        <div class="comentarios-lista" id="lista-comentarios-1">
+          <div class="comentario" data-comment-id="1">
+            <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+            <div class="comment-content">
+              <strong>Júlia Perdigão</strong><br />
+              <span class="tempo">Semana retrasada</span><br />
+              <div class="estrelas" onclick="avaliarComentario(1)">★★★★★</div>
+              <p>Serviço excelente!!!</p>
+            </div>
+            <div class="comment-actions">
+              <button onclick="curtirComentario(1)" class="btn-like-comment">👍 <span>120</span></button>
+              <button onclick="responderComentario(1)" class="btn-reply">💬 Responder</button>
+              <button onclick="denunciarComentario(1)" class="btn-report">⚠️</button>
+            </div>
+          </div>
+          
+          <div class="comentario" data-comment-id="2">
+            <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+            <div class="comment-content">
+              <strong>Yoga Prata</strong><br />
+              <span class="tempo">Semana retrasada</span><br />
+              <div class="estrelas" onclick="avaliarComentario(2)">★★★★★</div>
+              <p>Só receitas maravilhosas!!!</p>
+            </div>
+            <div class="comment-actions">
+              <button onclick="curtirComentario(2)" class="btn-like-comment">👍 <span>47</span></button>
+              <button onclick="responderComentario(2)" class="btn-reply">💬 Responder</button>
+              <button onclick="denunciarComentario(2)" class="btn-report">⚠️</button>
+            </div>
+          </div>
+          
+          <div class="comentario" data-comment-id="3">
+            <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+            <div class="comment-content">
+              <strong>Carlos Silva</strong><br />
+              <span class="tempo">3 dias atrás</span><br />
+              <div class="estrelas" onclick="avaliarComentario(3)">★★★★☆</div>
+              <p>Receita muito boa, mas poderia ter mais detalhes no preparo!</p>
+            </div>
+            <div class="comment-actions">
+              <button onclick="curtirComentario(3)" class="btn-like-comment">👍 <span>23</span></button>
+              <button onclick="responderComentario(3)" class="btn-reply">💬 Responder</button>
+              <button onclick="denunciarComentario(3)" class="btn-report">⚠️</button>
+            </div>
+          </div>
+          
+          <div class="comentario" data-comment-id="4">
+            <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+            <div class="comment-content">
+              <strong>Ana Costa</strong><br />
+              <span class="tempo">1 dia atrás</span><br />
+              <div class="estrelas" onclick="avaliarComentario(4)">★★★★★</div>
+              <p>Perfeita! Fiz ontem e ficou incrível. Toda a família adorou!</p>
+            </div>
+            <div class="comment-actions">
+              <button onclick="curtirComentario(4)" class="btn-like-comment">👍 <span>89</span></button>
+              <button onclick="responderComentario(4)" class="btn-reply">💬 Responder</button>
+              <button onclick="denunciarComentario(4)" class="btn-report">⚠️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      
+      <div class="interacoes">
+        <h2>Suas Interações</h2>
+        
+        <div class="interacao-group">
+          <h3>Receitas Avaliadas</h3>
+          <div id="avaliacoes-lista"></div>
+        </div>
+        
+        <div class="interacao-group">
+          <h3>Posts Curtidos</h3>
+          <div id="curtidas-lista"></div>
+        </div>
+        
+        <div class="interacao-group">
+          <h3>Comentários Feitos</h3>
+          <div id="comentarios-feitos-lista"></div>
+        </div>
+        
+        <div class="interacao-group">
+          <h3>Denúncias Enviadas</h3>
+          <div id="denuncias-lista"></div>
+        </div>
+      </div>
+      
+      <div class="post" data-post-id="2">
+        <h2>BOLO DE CHOCOLATE <span class="rating">4.8 ★★★★☆</span></h2>
+        <div class="author">
+          <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+          <div>
+            <strong>Maria Silva</strong><br />
+            <span class="tempo">2 dias atrás</span>
+          </div>
+        </div>
+        <img class="video-thumb" src="https://daniellychavesblog.wordpress.com/wp-content/uploads/2017/06/cozinhar1.jpg" alt="Vídeo da receita" />
+        
+        <div class="post-actions">
+          <button onclick="curtirPost(2)" class="btn-like" id="like-post-2">👍 <span id="likes-post-2">85</span></button>
+          <button onclick="toggleComentarios(2)" class="btn-comment">💬 <span id="comments-post-2">12</span></button>
+          <button onclick="avaliarPost(2)" class="btn-rate">⭐ Avaliar</button>
+          <button onclick="denunciarPost(2)" class="btn-report">⚠️ Denunciar</button>
+        </div>
+        
+        <div class="comentarios-section" id="comentarios-2">
+          <div class="add-comment">
+            <input type="text" id="comment-input-2" placeholder="Adicione um comentário..." />
+            <button onclick="adicionarComentario(2)">Enviar</button>
+          </div>
+          <div class="comentarios-lista" id="lista-comentarios-2">
+            <div class="comentario" data-comment-id="5">
+              <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+              <div class="comment-content">
+                <strong>Pedro Santos</strong><br />
+                <span class="tempo">1 dia atrás</span><br />
+                <div class="estrelas" onclick="avaliarComentario(5)">★★★★★</div>
+                <p>Melhor bolo de chocolate que já fiz! Muito fácil e saboroso.</p>
+              </div>
+              <div class="comment-actions">
+                <button onclick="curtirComentario(5)" class="btn-like-comment">👍 <span>34</span></button>
+                <button onclick="responderComentario(5)" class="btn-reply">💬 Responder</button>
+                <button onclick="denunciarComentario(5)" class="btn-report">⚠️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="post" data-post-id="3">
+        <h2>LASANHA VEGETARIANA <span class="rating">4.5 ★★★★☆</span></h2>
+        <div class="author">
+          <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+          <div>
+            <strong>Ana Oliveira</strong><br />
+            <span class="tempo">5 dias atrás</span>
+          </div>
+        </div>
+        <img class="video-thumb" src="https://daniellychavesblog.wordpress.com/wp-content/uploads/2017/06/cozinhar1.jpg" alt="Vídeo da receita" />
+        
+        <div class="post-actions">
+          <button onclick="curtirPost(3)" class="btn-like" id="like-post-3">👍 <span id="likes-post-3">67</span></button>
+          <button onclick="toggleComentarios(3)" class="btn-comment">💬 <span id="comments-post-3">8</span></button>
+          <button onclick="avaliarPost(3)" class="btn-rate">⭐ Avaliar</button>
+          <button onclick="denunciarPost(3)" class="btn-report">⚠️ Denunciar</button>
+        </div>
+        
+        <div class="comentarios-section" id="comentarios-3">
+          <div class="add-comment">
+            <input type="text" id="comment-input-3" placeholder="Adicione um comentário..." />
+            <button onclick="adicionarComentario(3)">Enviar</button>
+          </div>
+          <div class="comentarios-lista" id="lista-comentarios-3">
+            <div class="comentario" data-comment-id="6">
+              <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+              <div class="comment-content">
+                <strong>Lucas Ferreira</strong><br />
+                <span class="tempo">4 dias atrás</span><br />
+                <div class="estrelas" onclick="avaliarComentario(6)">★★★★☆</div>
+                <p>Boa opção vegetariana! Minha família aprovou.</p>
+              </div>
+              <div class="comment-actions">
+                <button onclick="curtirComentario(6)" class="btn-like-comment">👍 <span>18</span></button>
+                <button onclick="responderComentario(6)" class="btn-reply">💬 Responder</button>
+                <button onclick="denunciarComentario(6)" class="btn-report">⚠️</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-   
-    <section id="receita">
+    <section class="receita-box">
+      <div class="receita">
       <h2>RECEITA</h2>
       <div class="video-container">
         <iframe width="200px" height="200px" src="https://www.youtube.com/embed/Ch_bVCTnitw?si=_-zneXBVvA0kIGyJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -103,71 +302,516 @@
         Em um bowl, misture a farinha de aveia, o iogurte, azeite, sal e o fermento até formar uma massa uniforme.<br />
         A massa deve ficar moldável, sem grudar nas mãos. Se necessário, adicione um pouco mais de farinha de aveia.
       </p>
-    </section>
-
-     <section id="post">
-      <h2>PIZZA SEM TRIGO <span id="rating">5.0 ★★★★★</span></h2>
-      <div class="author">
-        <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
-    
-        <div>
-          <strong>Isabela Bigarelli</strong><br />
-          <span class="tempo">Semana passada</span>
-        </div>
       </div>
-      <img class="video-thumb" src="https://daniellychavesblog.wordpress.com/wp-content/uploads/2017/06/cozinhar1.jpg" alt="Vídeo da receita" />
-      <br>
-      <div class="icons">👍 120 | 💬 32 | ⚠️</div>
-
-
-
-      <div class="comentario">
-        <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
-        <div>
-          <strong>Júlia Perdigão</strong><br />
-          <span class="tempo">Semana retrasada</span><br />
-          <h3 class="estrelas">★★★★★</h3><br />
-          <h4>Serviço excelente!!!</h4>
-        </div>
-        <div class="icons">👍 120 | 💬 32 | ⚠️</div>
-      </div>
-
-      <div class="comentario">
-        <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
-        <div>
-          <strong>Yago Prata</strong><br />
-          <span class="tempo">Semana retrasada</span><br />
-         <h3 class="estrelas">★★★★★</h3> <br />
-          <h4>Só receitas maravilhosas!!!</h4>
-        </div>
-        <div class="icons">👍 47 | 💬 9 | ⚠️</div>
-      </div>
-    </section>
-
-   
-    <section id="receita">
-      <h2>RECEITA</h2>
-      <div class="video-container">
-        <iframe width="200px" height="200px" src="https://www.youtube.com/embed/Ch_bVCTnitw?si=_-zneXBVvA0kIGyJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      </div>
-      <h3>INGREDIENTES:</h3>
-      <ul>
-        <li>1 xícara de farelo ou farinha de aveia</li>
-        <li>1 ovo</li>
-        <li>1 colher de sopa de azeite de oliva</li>
-        <li>1 colher de chá de fermento químico (tipo pó Royal)</li>
-        <li>1 pitada de sal</li>
-        <li>2 a 4 colheres de sopa de água (até dar o ponto)</li>
-      </ul>
-
-      <h3>Modo de preparo:</h3>
-      <p>
-        Prepare a massa:<br />
-        Em um bowl, misture a farinha de aveia, o iogurte, azeite, sal e o fermento até formar uma massa uniforme.<br />
-        A massa deve ficar moldável, sem grudar nas mãos. Se necessário, adicione um pouco mais de farinha de aveia.
-      </p>
     </section>
   </main>
-  <script src="script.js"> </script>
+
+  <!-- Modal de Avaliação -->
+  <div id="modalAvaliacao" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; width: 300px;">
+      <h3>Avaliar Receita</h3>
+      <div class="rating-stars">
+        <span onclick="setRating(1)">⭐</span>
+        <span onclick="setRating(2)">⭐</span>
+        <span onclick="setRating(3)">⭐</span>
+        <span onclick="setRating(4)">⭐</span>
+        <span onclick="setRating(5)">⭐</span>
+      </div>
+      <textarea id="comentarioAvaliacao" placeholder="Deixe um comentário (opcional)"></textarea>
+      <div style="text-align: right; margin-top: 10px;">
+        <button onclick="fecharModalAvaliacao()">Cancelar</button>
+        <button onclick="salvarAvaliacao()" style="background: #e9551e; color: white;">Avaliar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Denúncia -->
+  <div id="modalDenuncia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px; width: 300px;">
+      <h3>Denunciar Conteúdo</h3>
+      <select id="motivoDenuncia">
+        <option value="spam">Spam</option>
+        <option value="ofensivo">Conteúdo Ofensivo</option>
+        <option value="falso">Informação Falsa</option>
+        <option value="outro">Outro</option>
+      </select>
+      <textarea id="detalheDenuncia" placeholder="Detalhes (opcional)"></textarea>
+      <div style="text-align: right; margin-top: 10px;">
+        <button onclick="fecharModalDenuncia()">Cancelar</button>
+        <button onclick="enviarDenuncia()" style="background: #dc3545; color: white;">Denunciar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tutorial -->
+  <div id="modalTutorial" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; width: 500px; max-height: 80%; overflow-y: auto;">
+      <h3>🎥 Postar Tutorial</h3>
+      <p style="color: #666; margin-bottom: 20px;">Compartilhe seu conhecimento culinário com a comunidade!</p>
+      
+      <div style="margin: 15px 0;">
+        <label><strong>Escolha uma receita salva:</strong></label>
+        <select id="receitaSelecionada" style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+          <option value="">Carregando receitas...</option>
+        </select>
+      </div>
+      
+      <div style="margin: 15px 0;">
+        <label><strong>Link do vídeo (YouTube, Vimeo, etc.):</strong></label>
+        <input type="url" id="linkVideo" placeholder="https://youtube.com/watch?v=..." style="width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;">
+      </div>
+      
+      <div style="margin: 15px 0;">
+        <label><strong>Descrição do tutorial:</strong></label>
+        <textarea id="descricaoTutorial" placeholder="Conte sobre seu tutorial, dicas especiais, etc..." style="width: 100%; height: 80px; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+      </div>
+      
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+        <p style="font-size: 14px; color: #666;">
+          🌟 <strong>Requisitos:</strong><br>
+          • Avaliação mínima: 4.5 estrelas<br>
+          • Mínimo 10 receitas avaliadas<br>
+          • Conteúdo original e de qualidade
+        </p>
+      </div>
+      
+      <div style="text-align: right; margin-top: 20px;">
+        <button onclick="fecharModalTutorial()" style="background: #ccc; color: black; border: none; padding: 10px 20px; border-radius: 5px; margin-right: 10px;">Cancelar</button>
+        <button onclick="enviarTutorial()" style="background: #e9551e; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Enviar Tutorial</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let currentPostId = null;
+    let currentCommentId = null;
+    let currentRating = 0;
+
+    // Carregar interações e idioma ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarInteracoes();
+      
+      // Carregar foto do usuário
+      carregarFotoUsuarioLocal();
+      
+      // Carregar idioma salvo
+      const savedLang = localStorage.getItem('language');
+      if (savedLang === 'en') {
+        document.getElementById('currentFlag').src = 'https://flagcdn.com/w40/us.png';
+        document.getElementById('currentFlag').alt = 'EN';
+        // Aplicar tradução
+        setTimeout(() => aplicarTraducaoIngles(), 100);
+      }
+    });
+    
+    function aplicarTraducaoIngles() {
+      const translations = {
+        'Posts': 'Posts',
+        'PIZZA SEM TRIGO': 'WHEAT-FREE PIZZA',
+        'BOLO DE CHOCOLATE': 'CHOCOLATE CAKE', 
+        'LASANHA VEGETARIANA': 'VEGETARIAN LASAGNA',
+        'Semana passada': 'Last week',
+        '2 dias atrás': '2 days ago',
+        '5 dias atrás': '5 days ago',
+        'Avaliar': 'Rate',
+        'Denunciar': 'Report',
+        'Adicione um comentário...': 'Add a comment...',
+        'Enviar': 'Send',
+        'Responder': 'Reply',
+        'Suas Interações': 'Your Interactions',
+        'Receitas Avaliadas': 'Rated Recipes',
+        'Posts Curtidos': 'Liked Posts',
+        'Comentários Feitos': 'Comments Made',
+        'Denúncias Enviadas': 'Reports Sent',
+        'RECEITA': 'RECIPE',
+        'INGREDIENTES:': 'INGREDIENTS:',
+        'Modo de preparo:': 'Instructions:'
+      };
+      
+      // Aplicar traduções
+      Object.keys(translations).forEach(pt => {
+        document.querySelectorAll('*').forEach(el => {
+          if (el.textContent && el.textContent.trim() === pt && el.children.length === 0) {
+            el.textContent = translations[pt];
+          }
+          if (el.placeholder === pt) {
+            el.placeholder = translations[pt];
+          }
+        });
+      });
+    }
+    
+    function carregarInteracoes() {
+      // Carregar avaliações
+      const avaliacoes = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+      const avaliacoesList = document.getElementById('avaliacoes-lista');
+      avaliacoesList.innerHTML = avaliacoes.length ? avaliacoes.map(av => 
+        `<div class="interacao-item">
+          <strong>Post ${av.postId}</strong> - ${'⭐'.repeat(av.rating)} - ${av.comment || 'Sem comentário'}
+          <small>${av.date}</small>
+        </div>`
+      ).join('') : '<p>Nenhuma avaliação feita</p>';
+      
+      // Carregar curtidas
+      const interactions = JSON.parse(localStorage.getItem('user_interactions') || '{}');
+      const curtidasList = document.getElementById('curtidas-lista');
+      const curtidas = interactions.posts || {};
+      curtidasList.innerHTML = Object.keys(curtidas).length ? Object.keys(curtidas).map(postId => 
+        `<div class="interacao-item">
+          <strong>Post ${postId}</strong> - Curtido
+        </div>`
+      ).join('') : '<p>Nenhum post curtido</p>';
+      
+      // Carregar comentários feitos
+      const userComments = JSON.parse(localStorage.getItem('user_comments') || '[]');
+      const comentariosList = document.getElementById('comentarios-feitos-lista');
+      comentariosList.innerHTML = userComments.length ? userComments.map(comment => 
+        `<div class="interacao-item">
+          <strong>Post ${comment.postId}</strong> - "${comment.text.substring(0, 50)}..."
+          <small>${comment.date}</small>
+        </div>`
+      ).join('') : '<p>Nenhum comentário feito</p>';
+      
+      // Carregar denúncias
+      const denuncias = JSON.parse(localStorage.getItem('user_reports') || '[]');
+      const denunciasList = document.getElementById('denuncias-lista');
+      denunciasList.innerHTML = denuncias.length ? denuncias.map(den => 
+        `<div class="interacao-item">
+          <strong>${den.type === 'post' ? 'Post' : 'Comentário'} ${den.id}</strong> - ${den.reason}
+          <small>${den.date}</small>
+        </div>`
+      ).join('') : '<p>Nenhuma denúncia enviada</p>';
+    }
+
+    function curtirPost(postId) {
+      const likesSpan = document.getElementById(`likes-post-${postId}`);
+      let likes = parseInt(likesSpan.textContent);
+      likes++;
+      likesSpan.textContent = likes;
+      
+      // Salvar no localStorage
+      const interactions = JSON.parse(localStorage.getItem('user_interactions') || '{}');
+      if (!interactions.posts) interactions.posts = {};
+      interactions.posts[postId] = { liked: true, likes: likes };
+      localStorage.setItem('user_interactions', JSON.stringify(interactions));
+      
+      carregarInteracoes();
+    }
+
+    function toggleComentarios(postId) {
+      const comentarios = document.getElementById(`comentarios-${postId}`);
+      comentarios.style.display = comentarios.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function avaliarPost(postId) {
+      currentPostId = postId;
+      document.getElementById('modalAvaliacao').style.display = 'block';
+    }
+
+    function setRating(stars) {
+      currentRating = stars;
+      const starElements = document.querySelectorAll('.rating-stars span');
+      starElements.forEach((star, index) => {
+        star.style.color = index < stars ? '#ffd700' : '#ccc';
+      });
+    }
+
+    function salvarAvaliacao() {
+      if (currentRating === 0) {
+        alert('Selecione uma avaliação!');
+        return;
+      }
+      
+      const comentario = document.getElementById('comentarioAvaliacao').value;
+      
+      // Salvar avaliação
+      const avaliacoes = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+      avaliacoes.push({
+        postId: currentPostId,
+        rating: currentRating,
+        comment: comentario,
+        date: new Date().toLocaleDateString()
+      });
+      localStorage.setItem('user_reviews', JSON.stringify(avaliacoes));
+      
+      alert('Avaliação salva com sucesso!');
+      fecharModalAvaliacao();
+      carregarInteracoes();
+    }
+
+    function fecharModalAvaliacao() {
+      document.getElementById('modalAvaliacao').style.display = 'none';
+      currentRating = 0;
+      document.getElementById('comentarioAvaliacao').value = '';
+    }
+
+    function denunciarPost(postId) {
+      currentPostId = postId;
+      document.getElementById('modalDenuncia').style.display = 'block';
+    }
+
+    function denunciarComentario(commentId) {
+      currentCommentId = commentId;
+      document.getElementById('modalDenuncia').style.display = 'block';
+    }
+
+    function enviarDenuncia() {
+      const motivo = document.getElementById('motivoDenuncia').value;
+      const detalhe = document.getElementById('detalheDenuncia').value;
+      
+      // Salvar denúncia
+      const denuncias = JSON.parse(localStorage.getItem('user_reports') || '[]');
+      denuncias.push({
+        type: currentPostId ? 'post' : 'comment',
+        id: currentPostId || currentCommentId,
+        reason: motivo,
+        details: detalhe,
+        date: new Date().toLocaleDateString()
+      });
+      localStorage.setItem('user_reports', JSON.stringify(denuncias));
+      
+      alert('Denúncia enviada com sucesso!');
+      fecharModalDenuncia();
+      carregarInteracoes();
+    }
+
+    function fecharModalDenuncia() {
+      document.getElementById('modalDenuncia').style.display = 'none';
+      currentPostId = null;
+      currentCommentId = null;
+    }
+
+    function curtirComentario(commentId) {
+      const btn = document.querySelector(`[data-comment-id="${commentId}"] .btn-like-comment span`);
+      let likes = parseInt(btn.textContent);
+      likes++;
+      btn.textContent = likes;
+      
+      // Salvar curtida do comentário
+      const interactions = JSON.parse(localStorage.getItem('user_interactions') || '{}');
+      if (!interactions.comments) interactions.comments = {};
+      interactions.comments[commentId] = { liked: true, likes: likes };
+      localStorage.setItem('user_interactions', JSON.stringify(interactions));
+      
+      carregarInteracoes();
+    }
+    
+    function adicionarComentario(postId) {
+      const input = document.getElementById(`comment-input-${postId}`);
+      const comentario = input.value.trim();
+      
+      if (!comentario) return;
+      
+      const lista = document.getElementById(`lista-comentarios-${postId}`);
+      const newComment = document.createElement('div');
+      const newId = Date.now();
+      newComment.className = 'comentario';
+      newComment.setAttribute('data-comment-id', newId);
+      newComment.innerHTML = `
+        <img src="person_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png" alt="Avatar" />
+        <div class="comment-content">
+          <strong>Você</strong><br />
+          <span class="tempo">Agora</span><br />
+          <p>${comentario}</p>
+        </div>
+        <div class="comment-actions">
+          <button onclick="curtirComentario(${newId})" class="btn-like-comment">👍 <span>0</span></button>
+          <button onclick="denunciarComentario(${newId})" class="btn-report">⚠️</button>
+        </div>
+      `;
+      lista.appendChild(newComment);
+      input.value = '';
+      
+      // Salvar comentário feito
+      const userComments = JSON.parse(localStorage.getItem('user_comments') || '[]');
+      userComments.push({
+        id: newId,
+        postId: postId,
+        text: comentario,
+        date: new Date().toLocaleDateString()
+      });
+      localStorage.setItem('user_comments', JSON.stringify(userComments));
+      
+      // Atualizar contador
+      const counter = document.getElementById(`comments-post-${postId}`);
+      counter.textContent = parseInt(counter.textContent) + 1;
+      
+      carregarInteracoes();
+    }
+
+    function logout() {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        fetch('/logout', { method: 'POST' })
+          .then(() => {
+            window.location.href = '/Login.html';
+          });
+      }
+    }
+    
+    function abrirModalTutorial() {
+      // Verificar se usuário tem permissão
+      const avaliacoes = JSON.parse(localStorage.getItem('user_reviews') || '[]');
+      
+      if (avaliacoes.length < 10) {
+        alert('🚫 Você precisa ter pelo menos 10 receitas avaliadas para postar tutoriais!\n\nAvalie mais receitas e tente novamente.');
+        return;
+      }
+      
+      const mediaAvaliacoes = avaliacoes.reduce((sum, av) => sum + av.rating, 0) / avaliacoes.length;
+      if (mediaAvaliacoes < 4.5) {
+        alert('🚫 Sua avaliação média precisa ser pelo menos 4.5 estrelas para postar tutoriais!\n\nSua média atual: ' + mediaAvaliacoes.toFixed(1) + ' estrelas');
+        return;
+      }
+      
+      // Carregar receitas salvas
+      carregarReceitasSalvas();
+      document.getElementById('modalTutorial').style.display = 'block';
+    }
+    
+    function carregarReceitasSalvas() {
+      const pastas = JSON.parse(localStorage.getItem('pastas_receitas') || '[]');
+      const select = document.getElementById('receitaSelecionada');
+      
+      let receitas = [];
+      pastas.forEach(pasta => {
+        if (pasta.receitas) {
+          pasta.receitas.forEach(receita => {
+            receitas.push({ nome: receita.nome, pasta: pasta.nome });
+          });
+        }
+      });
+      
+      if (receitas.length === 0) {
+        select.innerHTML = '<option value="">Nenhuma receita salva encontrada</option>';
+        return;
+      }
+      
+      select.innerHTML = '<option value="">Selecione uma receita...</option>' + 
+        receitas.map(receita => 
+          `<option value="${receita.nome}">${receita.nome} (${receita.pasta})</option>`
+        ).join('');
+    }
+    
+    function fecharModalTutorial() {
+      document.getElementById('modalTutorial').style.display = 'none';
+      document.getElementById('receitaSelecionada').value = '';
+      document.getElementById('linkVideo').value = '';
+      document.getElementById('descricaoTutorial').value = '';
+    }
+    
+    function enviarTutorial() {
+      const receita = document.getElementById('receitaSelecionada').value;
+      const video = document.getElementById('linkVideo').value;
+      const descricao = document.getElementById('descricaoTutorial').value;
+      
+      if (!receita || !video) {
+        alert('Preencha receita e link do vídeo!');
+        return;
+      }
+      
+      fetch('/tutorial/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          receita: receita,
+          video_url: video,
+          descricao: descricao
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('🎉 Tutorial enviado com sucesso!\n\nSeu tutorial será analisado pela nossa equipe e publicado em breve.');
+          fecharModalTutorial();
+        } else {
+          alert('Erro: ' + data.message);
+        }
+      })
+      .catch(error => {
+        alert('Erro ao enviar tutorial.');
+      });
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('profileSidebar');
+      sidebar.style.display = sidebar.style.display === 'flex' ? 'none' : 'flex';
+    }
+    
+    function toggleLanguage() {
+      const options = document.getElementById('languageOptions');
+      if (options) {
+        if (options.style.display === 'block') {
+          options.style.display = 'none';
+        } else {
+          options.style.display = 'block';
+        }
+      }
+    }
+    
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      
+      const currentFlag = document.getElementById('currentFlag');
+      if (currentFlag) {
+        if (lang === 'en') {
+          currentFlag.src = 'https://flagcdn.com/w40/us.png';
+          currentFlag.alt = 'EN';
+        } else {
+          currentFlag.src = 'https://flagcdn.com/w40/br.png';
+          currentFlag.alt = 'BR';
+        }
+      }
+      
+      const options = document.getElementById('languageOptions');
+      if (options) options.style.display = 'none';
+      
+      // Recarregar página para aplicar tradução
+      location.reload();
+    }
+    
+    function carregarFotoUsuarioLocal() {
+      // Primeiro tentar localStorage
+      const fotoLocal = localStorage.getItem('user_photo');
+      if (fotoLocal) {
+        aplicarFotoLocal(fotoLocal);
+      }
+      
+      // Depois tentar servidor
+      fetch('/perfil-dados')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.usuario) {
+            document.getElementById('userName').textContent = data.usuario.nome_usuario;
+            if (data.usuario.foto_perfil) {
+              const fotoUrl = '/storage/' + data.usuario.foto_perfil;
+              aplicarFotoLocal(fotoUrl);
+            }
+          }
+        })
+        .catch(error => {
+          if (fotoLocal) {
+            aplicarFotoLocal(fotoLocal);
+          }
+        });
+    }
+    
+    function aplicarFotoLocal(fotoUrl) {
+      const userPhoto = document.getElementById('userPhoto');
+      if (userPhoto) {
+        userPhoto.src = fotoUrl;
+      }
+      
+      const perfilIcon = document.querySelector('img[alt="Perfil"]');
+      if (perfilIcon && perfilIcon !== userPhoto) {
+        perfilIcon.src = fotoUrl;
+        perfilIcon.style.borderRadius = '50%';
+        perfilIcon.style.width = '24px';
+        perfilIcon.style.height = '24px';
+        perfilIcon.style.objectFit = 'cover';
+      }
+    }
+
+  </script>
 </body>
 </html>

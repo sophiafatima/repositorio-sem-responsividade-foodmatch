@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = new PDO('sqlite:database/database.sqlite');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Verificar se email já existe
+
         $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email_usuario = ?");
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         
-        // Inserir usuário
+
         $stmt = $pdo->prepare("INSERT INTO usuarios (nome_usuario, email_usuario, senha_usuario, idioma, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$nome, $email, $senha, 1, date('Y-m-d H:i:s'), date('Y-m-d H:i:s')]);
         

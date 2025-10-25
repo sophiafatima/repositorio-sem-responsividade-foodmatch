@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - FoodMatch</title>
+  <link rel="stylesheet" href="Posts.css">
+</head>
+<body>
+  <header>
+    <div class="title">Painel Administrativo</div>
+  </header>
+
+  <main class="container">
+    <section class="admin-section">
+      <h2>📢 Gerenciar Publicidade</h2>
+      <button onclick="criarAnuncio()">+ Novo Anúncio</button>
+      <div id="anuncios"></div>
+    </section>
+
+    <section class="admin-section">
+      <h2>🏪 Gerenciar Fornecedores</h2>
+      <button onclick="cadastrarFornecedor()">+ Novo Fornecedor</button>
+      <div id="fornecedores"></div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarAnuncios();
+      carregarFornecedores();
+    });
+
+    function carregarAnuncios() {
+      fetch('/admin/publicidade')
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('anuncios');
+          container.innerHTML = data.anuncios.map(anuncio => 
+            `<div style="border: 1px solid #ddd; padding: 10px; margin: 5px;">
+              <strong>${anuncio.titulo}</strong> - ${anuncio.ativo ? 'Ativo' : 'Inativo'}
+            </div>`
+          ).join('');
+        });
+    }
+
+    function carregarFornecedores() {
+      fetch('/admin/fornecedores')
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('fornecedores');
+          container.innerHTML = data.fornecedores.map(fornecedor => 
+            `<div style="border: 1px solid #ddd; padding: 10px; margin: 5px;">
+              <strong>${fornecedor.nome}</strong> - ${fornecedor.categoria}
+            </div>`
+          ).join('');
+        });
+    }
+
+    function criarAnuncio() {
+      const titulo = prompt('Título do anúncio:');
+      if (titulo) {
+        fetch('/admin/publicidade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ titulo: titulo })
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          carregarAnuncios();
+        });
+      }
+    }
+
+    function cadastrarFornecedor() {
+      const nome = prompt('Nome do fornecedor:');
+      const categoria = prompt('Categoria:');
+      if (nome && categoria) {
+        fetch('/admin/fornecedores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome: nome, categoria: categoria })
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          carregarFornecedores();
+        });
+      }
+    }
+  </script>
+</body>
+</html>

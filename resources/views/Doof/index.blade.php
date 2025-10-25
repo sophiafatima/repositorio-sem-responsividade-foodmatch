@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>FoodMatch - Doof</title>
-  <link rel="stylesheet" href="{{ asset('Doof.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/Doof.css') }}" />
 </head>
 <body>
   <aside class="sidebar">
@@ -528,6 +528,6 @@
       }
     });
   </script>
-  <script src="{{ asset('script.js') }}"></script>
+  <script src="{{ asset('js/script.js') }}"></script>
 </body>
 </html>

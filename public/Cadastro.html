@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>Cadastro - FoodMatch</title>
   <link rel="stylesheet" href="Cadastro.css" />
 </head>
@@ -36,13 +37,39 @@
       </div>
     </form>
   </div>
-  <script src="script.js"></script>
+
   <script>
+    let isPasswordReset = false;
+    
+    // Verificar se é redefinição de senha
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/perfil-dados')
+        .then(response => response.json())
+        .then(data => {
+          // Se há sessão de reset, é redefinição de senha
+          if (data.reset_mode) {
+            isPasswordReset = true;
+            document.querySelector('h2').textContent = 'Redefinir Senha';
+            document.querySelector('button[type="submit"]').textContent = 'Atualizar Senha';
+            
+            // Ocultar campos desnecessários
+            document.querySelector('label[for="usuario"]').style.display = 'none';
+            document.getElementById('usuario').style.display = 'none';
+            document.querySelector('label[for="email"]').style.display = 'none';
+            document.getElementById('email').style.display = 'none';
+            
+            // Focar na senha
+            document.getElementById('senha').focus();
+          }
+        })
+        .catch(() => {
+          // Continuar com cadastro normal
+        });
+    });
+    
     document.getElementById('cadastroForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const nome = document.getElementById('usuario').value;
-      const email = document.getElementById('email').value;
       const senha = document.getElementById('senha').value;
       const confirmarSenha = document.getElementById('confirmarSenha').value;
       const messageDiv = document.getElementById('message');
@@ -55,35 +82,62 @@
         return;
       }
       
-      const formData = new FormData();
-      formData.append('nome_usuario', nome);
-      formData.append('email_usuario', email);
-      formData.append('senha_usuario', senha);
-      
-      fetch('/usuarios', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        messageDiv.style.display = 'block';
-        if (data.success) {
-          messageDiv.style.backgroundColor = '#d4edda';
-          messageDiv.style.color = '#155724';
-          messageDiv.textContent = data.message;
-          setTimeout(() => window.location.href = data.redirect, 2000);
-        } else {
+      if (isPasswordReset) {
+        // Atualizar apenas a senha
+        fetch('/atualizar-senha', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ senha_usuario: senha })
+        })
+        .then(response => response.json())
+        .then(data => {
+          messageDiv.style.display = 'block';
+          if (data.success) {
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.color = '#155724';
+            messageDiv.textContent = data.message;
+            setTimeout(() => window.location.href = data.redirect || 'Doof.html', 2000);
+          } else {
+            messageDiv.style.backgroundColor = '#f8d7da';
+            messageDiv.style.color = '#721c24';
+            messageDiv.textContent = data.message;
+          }
+        })
+        .catch(error => {
+          messageDiv.style.display = 'block';
           messageDiv.style.backgroundColor = '#f8d7da';
           messageDiv.style.color = '#721c24';
-          messageDiv.textContent = data.message;
-        }
-      })
-      .catch(error => {
-        messageDiv.style.display = 'block';
-        messageDiv.style.backgroundColor = '#f8d7da';
-        messageDiv.style.color = '#721c24';
-        messageDiv.textContent = 'Erro ao processar cadastro.';
-      });
+          messageDiv.textContent = 'Erro ao atualizar senha.';
+        });
+      } else {
+        // Cadastro normal
+        const nome = document.getElementById('usuario').value;
+        const email = document.getElementById('email').value;
+        
+        fetch('/cadastro-teste?nome=' + encodeURIComponent(nome) + '&email=' + encodeURIComponent(email) + '&senha=' + encodeURIComponent(senha), {
+          method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+          messageDiv.style.display = 'block';
+          if (data.success) {
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.color = '#155724';
+            messageDiv.textContent = data.message;
+            setTimeout(() => window.location.href = 'Doof.html', 2000);
+          } else {
+            messageDiv.style.backgroundColor = '#f8d7da';
+            messageDiv.style.color = '#721c24';
+            messageDiv.textContent = data.message;
+          }
+        })
+        .catch(error => {
+          messageDiv.style.display = 'block';
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.textContent = 'Erro ao processar cadastro.';
+        });
+      }
     });
   </script>
 </body>

@@ -19,9 +19,11 @@ body {
     background-color: #fff3e5;
     font-family: 'Inter', sans-serif;
     color: #000;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -35,9 +37,15 @@ header {
 
 main {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 20px;
     position: relative;
     z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 body.dark-mode {
@@ -50,7 +58,11 @@ body.dark-mode .titulo .palavra {
 }
 
 .dark-mode .botao-login {
-    background-color: #F7F7F7;
+    background-color: #f4511e;
+    color: white;
+}
+
+.dark-mode .botao-login a {
     color: white;
 }
 
@@ -184,11 +196,11 @@ body.dark-mode .language-selector img {
 }
 
 .titulo .palavra {
-    font-size: 9em;
+    font-size: 6em;
     font-weight: 900;
     line-height: .9em;
     display: block;
-    text-shadow: 6px 6px #bfbca5;
+    text-shadow: 4px 4px #bfbca5;
 }
 
 .titulo .palavra span {
@@ -198,9 +210,8 @@ body.dark-mode .language-selector img {
 .subtitulo {
     color: #f4511e;
     font-style: italic;
-    margin-top: 15px;
-    font-size: 18px;
-
+    margin-top: 10px;
+    font-size: 16px;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 1.5s ease, transform 1.5s ease;
@@ -212,13 +223,14 @@ body.dark-mode .language-selector img {
 }
 
 .busca {
-    margin-top: 25px;
+    margin-top: 20px;
     background-color: #fffaf3;
-    padding: 12px 20px;
+    padding: 10px 16px;
     border-radius: 30px;
     display: inline-flex;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
 }
 
 .icone-busca {
@@ -239,7 +251,106 @@ button {
 .busca input {
     border: none;
     outline: none;
-    font-size: 16px;
+    font-size: 14px;
     background: transparent;
-    width: 280px;
+    width: 250px;
+    max-width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .titulo .palavra {
+        font-size: 4em;
+        text-shadow: 3px 3px #bfbca5;
+    }
+    
+    .subtitulo {
+        font-size: 14px;
+        margin-top: 8px;
+    }
+    
+    .busca {
+        margin-top: 15px;
+        padding: 8px 12px;
+    }
+    
+    .busca input {
+        width: 200px;
+        font-size: 13px;
+    }
+    
+    header {
+        padding: 15px;
+    }
+    
+    .topo-direita {
+        gap: 15px;
+    }
+    
+    .botao-login {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo .palavra {
+        font-size: 3em;
+        text-shadow: 2px 2px #bfbca5;
+    }
+    
+    .subtitulo {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .busca {
+        margin-top: 10px;
+        padding: 6px 10px;
+    }
+    
+    .busca input {
+        width: 150px;
+        font-size: 12px;
+    }
+    
+    header {
+        padding: 10px;
+    }
+    
+    .topo-direita {
+        gap: 10px;
+    }
+    
+    .botao-login {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .language-selector img {
+        width: 30px;
+    }
+    
+    .lua {
+        width: 16px;
+    }
+}
+
+@media (max-height: 600px) {
+    main {
+        margin-top: 10px;
+        padding: 10px;
+    }
+    
+    .titulo .palavra {
+        font-size: 4em;
+    }
+    
+    .subtitulo {
+        margin-top: 5px;
+    }
+    
+    .busca {
+        margin-top: 10px;
+    }
 }
