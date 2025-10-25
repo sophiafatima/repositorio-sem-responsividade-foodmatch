@@ -1,0 +1,252 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    background-color: #fdf7ee;
+    color: #333;
+  }
+  body.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+  }
+  
+  .dark-mode header {
+    background-color: #1e1e1e;
+  }
+  
+  .dark-mode input,
+  .dark-mode .busca button {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+  }
+  
+  .dark-mode .botao-login {
+    background-color: #444;
+    color: white;
+  }
+
+.lua {
+    width: 20px;
+    height: auto;
+    cursor: pointer;
+}
+
+.dark-mode .user h3{
+  color: #444;
+}
+
+.dark-mode .container{
+  color: #444;
+}
+
+.dark-mode #receita{
+  color:#444;
+}
+
+  header {
+    background-color: #e9551e;
+    padding: 1rem 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  .header-buttons {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .btn {
+    background-color: white;
+    color: #e9551e;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s;
+    
+  }
+  
+  .btn:hover {
+    background-color: #f0f0f0;
+  }
+ #icon_perfil {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+ } 
+ .title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+
+.language-selector {
+  position: relative;
+}
+
+.language-selector img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.language-options {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 999;
+}
+
+.profile-sidebar {
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  width: 250px;
+  background-color: #e3e3e3;
+  padding: 1rem;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.profile-sidebar .user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.profile-sidebar button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+  
+  .container {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  #post, #receita {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+  
+  #rating {
+    color: #3a8120;
+    float: right;
+    font-size: 1.1rem;
+  }
+  
+  .author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .author img {
+    border-radius: 50%;
+  }
+  
+  .video-thumb, .pizza-img {
+    width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 8px;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; 
+    height: 0;
+    margin: 1rem 0;
+  }
+  
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 200px;
+    border-radius: 8px;
+  }
+  
+  .comentario {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .comentario img {
+    border-radius: 50%;
+  }
+  
+  .icons {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .tempo {
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  .receita ul {
+    margin: 1rem 0;
+    padding-left: 1.2rem;
+  }
+  
+  .receita ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .receita h3 {
+    color: #3a8120;
+    margin-top: 1rem;
+  }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Simples</title>
+</head>
+<body>
+    <h1>Teste de Funcionalidades</h1>
+    
+    <h2>1. Teste Doof</h2>
+    <a href="/doof" target="_blank">Abrir Doof</a>
+    
+    <h2>2. Teste Login</h2>
+    <a href="/login" target="_blank">Abrir Login</a>
+    
+    <h2>3. Teste Cadastro</h2>
+    <a href="/cadastro" target="_blank">Abrir Cadastro</a>
+    
+    <h2>4. Teste API Receitas</h2>
+    <button onclick="testarAPI()">Testar Gerar Receita</button>
+    <div id="resultado"></div>
+    
+    <script>
+        function testarAPI() {
+            fetch('/receita/gerar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ingredientes: 'frango',
+                    preferencias: {}
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resultado').innerHTML = 
+                    '<h3>Resultado:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('resultado').innerHTML = 
+                    '<h3>Erro:</h3><p>' + error.message + '</p>';
+            });
+        }
+    </script>
+</body>
+</html>

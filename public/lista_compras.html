@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Compras - FoodMatch</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .lista-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .receita-item {
+      border: 1px solid #ddd;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .ingrediente-item {
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+    }
+    .ingrediente-item input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    .btn {
+      background: #ff6b35;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .checked {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="lista-container">
+    <h2>📝 Lista de Compras</h2>
+    
+    <div class="receitas-selecionadas">
+      <h3>Receitas Selecionadas:</h3>
+      <div id="receitas-lista">
+        <div class="receita-item">
+          <h4>Omelete Simples</h4>
+          <div class="ingredientes">
+            <div class="ingrediente-item">
+              <input type="checkbox" id="ovos" onchange="toggleIngrediente(this)">
+              <label for="ovos">3 ovos</label>
+            </div>
+            <div class="ingrediente-item">
+              <input type="checkbox" id="sal" onchange="toggleIngrediente(this)">
+              <label for="sal">Sal a gosto</label>
+            </div>
+            <div class="ingrediente-item">
+              <input type="checkbox" id="oleo" onchange="toggleIngrediente(this)">
+              <label for="oleo">1 colher de óleo</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="receita-item">
+          <h4>Salada Verde</h4>
+          <div class="ingredientes">
+            <div class="ingrediente-item">
+              <input type="checkbox" id="alface" onchange="toggleIngrediente(this)">
+              <label for="alface">1 pé de alface</label>
+            </div>
+            <div class="ingrediente-item">
+              <input type="checkbox" id="tomate" onchange="toggleIngrediente(this)">
+              <label for="tomate">2 tomates</label>
+            </div>
+            <div class="ingrediente-item">
+              <input type="checkbox" id="azeite" onchange="toggleIngrediente(this)">
+              <label for="azeite">Azeite</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="acoes">
+      <button class="btn" onclick="adicionarReceita()">+ Adicionar Receita</button>
+      <button class="btn" onclick="compartilharLista()">📤 Compartilhar Lista</button>
+      <button class="btn" onclick="imprimirLista()">🖨️ Imprimir</button>
+      <button class="btn" onclick="salvarLista()">💾 Salvar Lista</button>
+    </div>
+  </div>
+  
+  <script>
+    function toggleIngrediente(checkbox) {
+      const label = checkbox.nextElementSibling;
+      if (checkbox.checked) {
+        label.classList.add('checked');
+      } else {
+        label.classList.remove('checked');
+      }
+    }
+    
+    function adicionarReceita() {
+      const nome = prompt('Nome da receita:');
+      const ingredientes = prompt('Ingredientes (separados por vírgula):');
+      
+      if (nome && ingredientes) {
+        const receitasLista = document.getElementById('receitas-lista');
+        const novaReceita = document.createElement('div');
+        novaReceita.className = 'receita-item';
+        
+        const ingredientesArray = ingredientes.split(',');
+        let ingredientesHTML = '';
+        
+        ingredientesArray.forEach((ing, index) => {
+          const id = `ing_${Date.now()}_${index}`;
+          ingredientesHTML += `
+            <div class="ingrediente-item">
+              <input type="checkbox" id="${id}" onchange="toggleIngrediente(this)">
+              <label for="${id}">${ing.trim()}</label>
+            </div>
+          `;
+        });
+        
+        novaReceita.innerHTML = `
+          <h4>${nome}</h4>
+          <div class="ingredientes">${ingredientesHTML}</div>
+        `;
+        
+        receitasLista.appendChild(novaReceita);
+      }
+    }
+    
+    function compartilharLista() {
+      const ingredientes = Array.from(document.querySelectorAll('.ingrediente-item label'))
+        .map(label => label.textContent)
+        .join('\n');
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Lista de Compras - FoodMatch',
+          text: `Minha lista de compras:\n\n${ingredientes}`
+        });
+      } else {
+        navigator.clipboard.writeText(`Lista de Compras - FoodMatch\n\n${ingredientes}`);
+        alert('Lista copiada para a área de transferência!');
+      }
+    }
+    
+    function imprimirLista() {
+      window.print();
+    }
+    
+    function salvarLista() {
+      const ingredientes = Array.from(document.querySelectorAll('.ingrediente-item'))
+        .map(item => ({
+          nome: item.querySelector('label').textContent,
+          comprado: item.querySelector('input').checked
+        }));
+      
+      localStorage.setItem('lista_compras', JSON.stringify(ingredientes));
+      alert('Lista salva com sucesso!');
+    }
+    
+    // Carregar lista salva
+    document.addEventListener('DOMContentLoaded', function() {
+      const listaSalva = localStorage.getItem('lista_compras');
+      if (listaSalva) {
+        const ingredientes = JSON.parse(listaSalva);
+        // Restaurar estado dos checkboxes
+        ingredientes.forEach(ing => {
+          const checkbox = Array.from(document.querySelectorAll('.ingrediente-item label'))
+            .find(label => label.textContent === ing.nome)
+            ?.previousElementSibling;
+          if (checkbox && ing.comprado) {
+            checkbox.checked = true;
+            toggleIngrediente(checkbox);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

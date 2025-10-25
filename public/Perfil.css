@@ -1,0 +1,288 @@
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap);
+
+body, header, .btn, .profile-sidebar, .recipe-card, .filter-buttons button {
+    transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    background-color: #fff3e5;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: flex-start;
+    position: relative;
+}
+
+
+main {
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+body.dark-mode {
+    background-color: #181818;
+    color: #FF5722;
+}
+
+body.dark-mode .titulo .palavra {
+    text-shadow: 6px 6px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .botao-login {
+    background-color: #F7F7F7;
+    color: white;
+}
+
+body.dark-mode .lua {
+    filter: brightness(0) invert(1);
+}
+
+.dark-mode .icone-busca a,
+button,
+.busca {
+    border: none;
+    background-color: #fffaf3;
+}
+
+body.dark-mode .language-selector img {
+    background-color: transparent;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.language-selector {
+    position: relative;
+}
+
+.language-selector img {
+    width: 40px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
+    background-color: transparent;
+}
+
+.language-selector img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.language-options {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.language-options.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.lua {
+  width: 20px;
+  height: auto;
+  cursor: pointer;
+}
+
+.dark-mode .user h3{
+  color: #444;
+}
+
+body {
+  background-color: #fdf1dd;
+}
+
+
+header {
+  background-color: #ef5621;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.btn {
+  background-color: white;
+  color: #e9551e;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #f0f0f0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.profile-sidebar {
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  width: 250px;
+  background-color: #e3e3e3;
+  padding: 1rem;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.profile-sidebar .user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.profile-sidebar button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+
+.main {
+  padding: 2rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+
+.recipes {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.recipe-card {
+  width: 200px;
+}
+
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 5px;
+}
+
+
+.recipe-grid img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.recipe-grid #torta, #pizza {
+  grid-column: 1;
+  grid-row: 1 / span 2; 
+}
+
+.recipe-grid #brownie, #brigadeiro {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.recipe-grid #bolo, #hamburguer {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+
+
+
+.recipe-title {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.recipe-info {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.add-button {
+  font-size: 2rem;
+  cursor: pointer;
+  margin-left: 2rem;
+}

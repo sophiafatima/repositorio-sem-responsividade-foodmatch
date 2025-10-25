@@ -1,0 +1,154 @@
+.receita-resultado {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.receita-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.receita-card h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+body.dark-mode .receita-card h3 {
+    color: #ecf0f1;
+}
+
+.receita-info {
+    display: grid;
+    gap: 15px;
+}
+
+.receita-ingredientes h4,
+.receita-preparo h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+body.dark-mode .receita-ingredientes h4,
+body.dark-mode .receita-preparo h4 {
+    color: #ecf0f1;
+}
+
+.receita-ingredientes ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.receita-ingredientes li {
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+body.dark-mode .receita-ingredientes li {
+    color: #bdc3c7;
+}
+
+.receita-preparo p {
+    white-space: pre-line;
+    line-height: 1.6;
+    background: #f1f2f6;
+    padding: 15px;
+    border-radius: 6px;
+    color: #2c3e50;
+}
+
+body.dark-mode .receita-preparo p {
+    background: #34495e;
+    color: #ecf0f1;
+}
+
+.receita-detalhes {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.receita-detalhes span {
+    background: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.salvar-receita-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.salvar-receita-btn:hover {
+    background: #219a52;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-bar input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-bar button {
+    white-space: nowrap;
+}
+
+.modal button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.modal label {
+    color: #2c3e50;
+    display: block;
+    margin: 10px 0;
+}
+
+body.dark-mode .modal label {
+    color: #ecf0f1;
+}
+
+.modal button:hover {
+    background: #c0392b;
+}
+
+#listas-salvas div {
+    background: #f8f9fa;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 3px solid #e74c3c;
+}
+
+#listas-salvas button {
+    background: #dc3545;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    margin-left: 10px;
+}

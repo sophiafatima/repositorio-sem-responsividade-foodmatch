@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preferências - FoodMatch</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .preferencias-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .checkbox-group {
+      margin: 15px 0;
+    }
+    .checkbox-group label {
+      display: block;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    .btn {
+      background: #ff6b35;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="preferencias-container">
+    <h2>Configure suas Preferências</h2>
+    
+    <form id="preferenciasForm">
+      <div id="message" style="display: none; padding: 10px; margin: 10px 0; border-radius: 5px;"></div>
+      
+      <h3>Restrições Alimentares:</h3>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="restricoes" value="vegetariano"> Vegetariano</label>
+        <label><input type="checkbox" name="restricoes" value="vegano"> Vegano</label>
+        <label><input type="checkbox" name="restricoes" value="sem_gluten"> Sem Glúten</label>
+        <label><input type="checkbox" name="restricoes" value="sem_lactose"> Sem Lactose</label>
+        <label><input type="checkbox" name="restricoes" value="diabetico"> Diabético</label>
+      </div>
+      
+      <h3>Preferências:</h3>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="preferencias" value="doce"> Doces</label>
+        <label><input type="checkbox" name="preferencias" value="salgado"> Salgados</label>
+        <label><input type="checkbox" name="preferencias" value="picante"> Picante</label>
+        <label><input type="checkbox" name="preferencias" value="light"> Light</label>
+        <label><input type="checkbox" name="preferencias" value="fitness"> Fitness</label>
+      </div>
+      
+      <button type="submit" class="btn">Salvar Preferências</button>
+    </form>
+  </div>
+  
+  <script>
+    document.getElementById('preferenciasForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const restricoes = Array.from(document.querySelectorAll('input[name="restricoes"]:checked')).map(cb => cb.value);
+      const preferencias = Array.from(document.querySelectorAll('input[name="preferencias"]:checked')).map(cb => cb.value);
+      
+      fetch('salvar_preferencias.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ restricoes, preferencias })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const messageDiv = document.getElementById('message');
+        messageDiv.style.display = 'block';
+        if (data.success) {
+          messageDiv.style.backgroundColor = '#d4edda';
+          messageDiv.style.color = '#155724';
+          messageDiv.textContent = 'Preferências salvas com sucesso!';
+          setTimeout(() => window.location.href = 'Doof.html', 2000);
+        } else {
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.textContent = data.message;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

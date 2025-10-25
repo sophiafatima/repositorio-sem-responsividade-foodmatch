@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - FoodMatch</title>
+  <link rel="stylesheet" href="Cadastro.css" />
+</head>
+<body>
+  <img src="moon-solid.svg" class="lua" />
+
+  <div class="cadastro-container">
+    <form class="cadastro-box" id="cadastroForm">
+      <h2>Cadastro</h2>
+      
+      <div id="message" style="display: none; padding: 10px; margin: 10px 0; border-radius: 5px;"></div>
+
+      <label for="email"><h4> Endereço de Email</h4></label>
+      <input type="email" id="email" required />
+
+      <label for="usuario"><h4>Nome de Usuário</h4></label>
+      <input type="text" id="usuario" required />
+
+      <label for="senha"><h4>Digite uma senha</h4></label>
+      <input type="password" id="senha" required />
+
+      <label for="confirmarSenha"><h4>Confirme a senha</h4></label>
+      <input type="password" id="confirmarSenha" required />
+
+      <button type="submit">Cadastrar</button>
+
+      <div class="ajuda">Precisa de ajuda?</div>
+
+      <div class="login">
+        Já tem uma conta? <a href="Login.html">Faça o login</a>
+      </div>
+    </form>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const nome = document.getElementById('usuario').value;
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const confirmarSenha = document.getElementById('confirmarSenha').value;
+      const messageDiv = document.getElementById('message');
+      
+      if (senha !== confirmarSenha) {
+        messageDiv.style.display = 'block';
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.textContent = 'As senhas não coincidem!';
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('nome_usuario', nome);
+      formData.append('email_usuario', email);
+      formData.append('senha_usuario', senha);
+      
+      fetch('/usuarios', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        messageDiv.style.display = 'block';
+        if (data.success) {
+          messageDiv.style.backgroundColor = '#d4edda';
+          messageDiv.style.color = '#155724';
+          messageDiv.textContent = data.message;
+          setTimeout(() => window.location.href = data.redirect, 2000);
+        } else {
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.textContent = data.message;
+        }
+      })
+      .catch(error => {
+        messageDiv.style.display = 'block';
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.textContent = 'Erro ao processar cadastro.';
+      });
+    });
+  </script>
+</body>
+</html>

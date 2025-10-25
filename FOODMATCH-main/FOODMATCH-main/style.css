@@ -1,0 +1,245 @@
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap);
+
+body,
+header,
+input,
+.busca button,
+.botao-login {
+    transition: background-color 0.6s ease, color 0.6s ease, border 0.6s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    background-color: #fff3e5;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: flex-start;
+    position: relative;
+}
+
+
+main {
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+body.dark-mode {
+    background-color: #181818;
+    color: #FF5722;
+}
+
+body.dark-mode .titulo .palavra {
+    text-shadow: 6px 6px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .botao-login {
+    background-color: #F7F7F7;
+    color: white;
+}
+
+body.dark-mode .lua {
+    filter: brightness(0) invert(1);
+}
+
+.dark-mode .icone-busca a,
+button,
+.busca {
+    border: none;
+    background-color: #fffaf3;
+}
+
+body.dark-mode .language-selector img {
+    background-color: transparent;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.language-selector {
+    position: relative;
+}
+
+.language-selector img {
+    width: 40px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease;
+    background-color: transparent;
+}
+
+.language-selector img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.language-options {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.language-options.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+
+.icone-menu {
+    width: 30px;
+    height: auto;
+    cursor: pointer;
+}
+
+.fundo-prato {
+    position: absolute;
+    top: -0.4em;
+    left: -1.5em;
+    width: 2.8em;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-150px) translateY(-80px) rotate(-180deg);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+}
+
+.fundo-prato.show {
+    opacity: 1;
+    transform: translateX(0) translateY(0) rotate(0deg);
+}
+
+.topo-direita {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    z-index: 2;
+}
+
+.lua {
+    width: 20px;
+    height: auto;
+    cursor: pointer;
+    transition: filter 0.6s ease;
+}
+
+.botao-login {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4511e;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.botao-login a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.botao-login .icone-login {
+    width: 21px;
+    height: auto;
+    padding: 2px;
+    cursor: pointer;
+}
+
+
+.icone-login {
+    width: 21px;
+    height: auto;
+    fill: white;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.titulo .palavra {
+    font-size: 9em;
+    font-weight: 900;
+    line-height: .9em;
+    display: block;
+    text-shadow: 6px 6px #bfbca5;
+}
+
+.titulo .palavra span {
+    font-size: inherit;
+}
+
+.subtitulo {
+    color: #f4511e;
+    font-style: italic;
+    margin-top: 15px;
+    font-size: 18px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+}
+
+.subtitulo.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.busca {
+    margin-top: 25px;
+    background-color: #fffaf3;
+    padding: 12px 20px;
+    border-radius: 30px;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.icone-busca {
+    width: 25px;
+    height: auto;
+    margin-left: 8px;
+    cursor: pointer;
+    padding: 0.5em;
+    background-color: #fffaf3;
+}
+
+.icone-busca a,
+button {
+    border: none;
+    background-color: #fffaf3;
+}
+
+.busca input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    width: 280px;
+}

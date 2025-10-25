@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suporte - FoodMatch</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .suporte-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .faq-item {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+    .faq-question {
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-answer {
+      display: none;
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+    .faq-answer.show {
+      display: block;
+    }
+    .contact-form {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .btn {
+      background: #ff6b35;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .chat-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      height: 400px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+    }
+    .chat-header {
+      background: #ff6b35;
+      color: white;
+      padding: 15px;
+      border-radius: 10px 10px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+    .chat-input {
+      padding: 15px;
+      border-top: 1px solid #eee;
+    }
+    .chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ff6b35;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .message {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 15px;
+      max-width: 80%;
+    }
+    .message.user {
+      background: #ff6b35;
+      color: white;
+      margin-left: auto;
+    }
+    .message.bot {
+      background: #f0f0f0;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="suporte-container">
+    <h2>🆘 Central de Suporte</h2>
+    
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h3>Perguntas Frequentes</h3>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Como criar uma conta no FoodMatch?
+          <span>+</span>
+        </div>
+        <div class="faq-answer">
+          Para criar uma conta, clique em "Cadastrar" na página inicial, preencha seus dados (nome, email e senha) e clique em "Cadastrar". Você receberá um email de confirmação.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Como configurar minhas restrições alimentares?
+          <span>+</span>
+        </div>
+        <div class="faq-answer">
+          Após fazer login, vá em "Preferências" no menu e selecione suas restrições alimentares (vegetariano, vegano, sem glúten, etc.) e suas preferências culinárias.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Como funciona a busca por receitas?
+          <span>+</span>
+        </div>
+        <div class="faq-answer">
+          Digite os ingredientes que você tem em casa na barra de busca. O sistema sugerirá receitas que você pode fazer com esses ingredientes, respeitando suas restrições alimentares.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Como criar uma lista de compras?
+          <span>+</span>
+        </div>
+        <div class="faq-answer">
+          Selecione as receitas que deseja fazer e clique em "Gerar Lista de Compras". O sistema criará automaticamente uma lista com todos os ingredientes necessários.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          Como alterar o idioma do site?
+          <span>+</span>
+        </div>
+        <div class="faq-answer">
+          Use o seletor de idioma no canto superior direito da tela. O FoodMatch está disponível em Português e Inglês.
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contact Form -->
+    <section class="contact-section">
+      <h3>Entre em Contato</h3>
+      <div class="contact-form">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="assunto">Assunto:</label>
+            <select id="assunto" name="assunto" required>
+              <option value="">Selecione um assunto</option>
+              <option value="bug">Reportar Bug</option>
+              <option value="sugestao">Sugestão</option>
+              <option value="duvida">Dúvida</option>
+              <option value="conta">Problema com Conta</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+          </div>
+          
+          <button type="submit" class="btn">Enviar Mensagem</button>
+        </form>
+      </div>
+    </section>
+  </div>
+  
+  <!-- Chat Widget -->
+  <button class="chat-toggle" onclick="toggleChat()">💬</button>
+  
+  <div class="chat-widget" id="chatWidget">
+    <div class="chat-header">
+      <span>Suporte FoodMatch</span>
+      <button onclick="toggleChat()" style="background: none; border: none; color: white; font-size: 18px;">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        Olá! Como posso ajudar você hoje?
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+      <button onclick="sendChatMessage()" class="btn" style="margin-top: 10px; width: 100%;">Enviar</button>
+    </div>
+  </div>
+  
+  <script src="theme.js"></script>
+  <script src="idioma.js"></script>
+  <script>
+    function toggleFAQ(element) {
+      const answer = element.nextElementSibling;
+      const icon = element.querySelector('span');
+      
+      if (answer.classList.contains('show')) {
+        answer.classList.remove('show');
+        icon.textContent = '+';
+      } else {
+        // Fechar outras FAQs abertas
+        document.querySelectorAll('.faq-answer.show').forEach(item => {
+          item.classList.remove('show');
+          item.previousElementSibling.querySelector('span').textContent = '+';
+        });
+        
+        answer.classList.add('show');
+        icon.textContent = '-';
+      }
+    }
+    
+    function toggleChat() {
+      const chatWidget = document.getElementById('chatWidget');
+      const chatToggle = document.querySelector('.chat-toggle');
+      
+      if (chatWidget.style.display === 'flex') {
+        chatWidget.style.display = 'none';
+        chatToggle.style.display = 'block';
+      } else {
+        chatWidget.style.display = 'flex';
+        chatToggle.style.display = 'none';
+      }
+    }
+    
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (message) {
+        addChatMessage(message, 'user');
+        input.value = '';
+        
+        // Simular resposta do bot
+        setTimeout(() => {
+          const botResponse = getBotResponse(message);
+          addChatMessage(botResponse, 'bot');
+        }, 1000);
+      }
+    }
+    
+    function handleChatKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+    
+    function addChatMessage(message, sender) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender}`;
+      messageDiv.textContent = message;
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    
+    function getBotResponse(message) {
+      const responses = {
+        'ola': 'Olá! Como posso ajudar você?',
+        'receita': 'Para buscar receitas, use a barra de busca na página principal e digite os ingredientes que você tem.',
+        'conta': 'Para criar uma conta, clique em "Cadastrar" na página inicial.',
+        'lista': 'Para criar uma lista de compras, selecione receitas e clique em "Gerar Lista de Compras".',
+        'preferencias': 'Você pode configurar suas preferências alimentares na seção "Preferências" do seu perfil.',
+        'idioma': 'Para alterar o idioma, use o seletor no canto superior direito da tela.',
+        'tema': 'Para alterar entre modo claro e escuro, clique no botão de lua/sol no canto superior esquerdo.'
+      };
+      
+      const lowerMessage = message.toLowerCase();
+      
+      for (const key in responses) {
+        if (lowerMessage.includes(key)) {
+          return responses[key];
+        }
+      }
+      
+      return 'Obrigado pela sua mensagem! Nossa equipe entrará em contato em breve. Para dúvidas mais específicas, consulte nossa seção de FAQ acima.';
+    }
+    
+    // Contact form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+      
+      // Simular envio
+      alert('Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.');
+      this.reset();
+    });
+  </script>
+</body>
+</html>

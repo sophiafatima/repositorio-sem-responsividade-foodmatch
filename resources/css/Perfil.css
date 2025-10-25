@@ -1,0 +1,207 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.dark-mode header {
+  background-color: #1e1e1e;
+}
+
+.dark-mode input,
+.dark-mode .busca button {
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+}
+
+.dark-mode .botao-login {
+  background-color: #444;
+  color: white;
+}
+
+.lua {
+  width: 20px;
+  height: auto;
+  cursor: pointer;
+}
+
+.dark-mode .user h3{
+  color: #444;
+}
+
+body {
+  background-color: #fdf1dd;
+}
+
+
+header {
+  background-color: #ef5621;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.btn {
+  background-color: white;
+  color: #e9551e;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #f0f0f0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.profile-sidebar {
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  width: 250px;
+  background-color: #e3e3e3;
+  padding: 1rem;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.profile-sidebar .user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.profile-sidebar button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+
+.main {
+  padding: 2rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+
+.recipes {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.recipe-card {
+  width: 200px;
+}
+
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 5px;
+}
+
+
+.recipe-grid img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.recipe-grid #torta, #pizza {
+  grid-column: 1;
+  grid-row: 1 / span 2; 
+}
+
+.recipe-grid #brownie, #brigadeiro {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.recipe-grid #bolo, #hamburguer {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+
+
+
+.recipe-title {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.recipe-info {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.add-button {
+  font-size: 2rem;
+  cursor: pointer;
+  margin-left: 2rem;
+}
